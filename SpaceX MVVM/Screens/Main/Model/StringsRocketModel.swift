@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct StringsModel {
+struct StringsRocketModel {
     var tittle: String?
     var value: String?
     var measure: String?

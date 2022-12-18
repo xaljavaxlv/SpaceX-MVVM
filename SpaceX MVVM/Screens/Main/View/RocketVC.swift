@@ -7,44 +7,43 @@
 
 import UIKit
 
-protocol MainRocketVCProtocol: AnyObject {
+protocol RocketVCProtocol: AnyObject {
     var mainPageVC: MainPageVCProtocol? { get set }
     func reload()
     func updateSavedSettings()
 }
 
-extension MainRocketVC: MainRocketVCProtocol {
+extension RocketVC: RocketVCProtocol {
     func updateSavedSettings() {
         mainPageVC?.reloadAllVC()
     }
     
     func reload() {
-        viewModel.updateTitles()
+        viewModel.updateHorizontalData()
         collectionView.reloadData()
     }
 }
 
-class MainRocketVC: UIViewController {
+final class RocketVC: UIViewController {
     
-    var collectionView: UICollectionView!
-    weak var mainPageVC: MainPageVCProtocol?
-    var viewModel: MainRocketViewModelProtocol!
+    private var collectionView: UICollectionView!
+    public weak var mainPageVC: MainPageVCProtocol?
+    private var viewModel: RocketViewModelProtocol!
     init(rocket: RocketModel) {
         super.init(nibName: nil, bundle: nil)
         setupScreen()
-        viewModel = MainRocketViewModel(viewController: self, rocket: rocket)
+        viewModel = RocketViewModel(viewController: self, rocket: rocket)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    func setupScreen() {
+    private func setupScreen() {
         createCollectionView()
         self.navigationController?.view.backgroundColor = .white
     }
-    func createCollectionView() {
-        let collectionViewLayout = createLayout()
-        collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
+    private func createCollectionView() {
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         view.addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
@@ -61,18 +60,18 @@ class MainRocketVC: UIViewController {
     }
 
     
-    func registerCells() {
-        self.collectionView.register(CellForTop.self, forCellWithReuseIdentifier: "CellForTop")
-        self.collectionView.register(CellForVerticalItem.self, forCellWithReuseIdentifier: "CellForVerticalItem")
-        self.collectionView.register(CellForHorizontalItem.self, forCellWithReuseIdentifier: "CellForHorizontalItem")
-        self.collectionView.register(CellForButton.self, forCellWithReuseIdentifier: "CellForButton")
+    private func registerCells() {
+        self.collectionView.register(RocketTopCell.self, forCellWithReuseIdentifier: "CellForTop")
+        self.collectionView.register(RocketVerticalItemCell.self, forCellWithReuseIdentifier: "CellForVerticalItem")
+        self.collectionView.register(RocketHorizontalItemCell.self, forCellWithReuseIdentifier: "CellForHorizontalItem")
+        self.collectionView.register(RocketLaunchButtonCell.self, forCellWithReuseIdentifier: "CellForButton")
     }
 
 
 }
 
 
-extension MainRocketVC: UICollectionViewDataSource {
+extension RocketVC: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         4
     }
@@ -96,52 +95,56 @@ extension MainRocketVC: UICollectionViewDataSource {
         }
     }
     // TODO: - nav VC - сделает ретейн сайкл? Узнать у Антона
-    func createCellForTop(indexPath: IndexPath) -> UICollectionViewCell {
+    private func createCellForTop(indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellForTop",
-                                                      for: indexPath) as? CellForTop
-        cell?.titleLabel.text = viewModel.titleRocket
-        cell?.navVC = self.navigationController // ретейн или нет?
-        cell?.delegate = self// cell -> SettingsVC -> cell- так ок?
-        return cell!
+                                                      for: indexPath) as? RocketTopCell
+        guard let cell = cell else { return UICollectionViewCell() }
+        cell.titleLabel.text = viewModel.titleRocket
+        cell.navVC = self.navigationController // ретейн или нет?
+        cell.delegate = self// cell -> SettingsVC -> cell- так ок?
+        return cell
     }
     
-    func createCellForHorizontalItems(indexPath: IndexPath) -> UICollectionViewCell {
+    private func createCellForHorizontalItems(indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellForHorizontalItem",
-                                                      for: indexPath) as? CellForHorizontalItem
+                                                      for: indexPath) as? RocketHorizontalItemCell
         
+        guard let cell = cell else { return UICollectionViewCell() }
         let model = viewModel.horizontalValues
         if model.count > 0 {
-            cell?.model = model[indexPath.row]
+            cell.updateLabelsText(model: model[indexPath.row])
         }
-        return cell!
+        return cell
     }
     
-    func createCellForVerticalItems(indexPath: IndexPath) -> UICollectionViewCell {
+    private func createCellForVerticalItems(indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellForVerticalItem",
-                                                      for: indexPath) as? CellForVerticalItem
+                                                      for: indexPath) as? RocketVerticalItemCell
+        guard let cell = cell else { return UICollectionViewCell() }
         let model = viewModel.verticalValues
         if model.count > 0 {
-            cell?.model = model[indexPath.row]
+            cell.setCell(model: model[indexPath.row])
         }
-        return cell!
+        return cell
     }
-    func createCellForButton(indexPath: IndexPath) -> UICollectionViewCell {
+    private func createCellForButton(indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellForButton",
-                                                      for: indexPath) as? CellForButton
-        cell!.button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        return cell!
+                                                      for: indexPath) as? RocketLaunchButtonCell
+        
+        guard let cell = cell else { return UICollectionViewCell() }
+        cell.button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+        return cell
     }
-    @objc func buttonAction() {
-        let launchesVC = LaunchesVC()
-        let viewModel = LaunchesVCViewModel(viewController: launchesVC, rocketId: viewModel.rocketId())
-        launchesVC.viewModel = viewModel
+    @objc private func buttonAction() {
+        let viewModel = LaunchVCViewModel(rocketName: viewModel.rocketName())
+        let launchesVC = LaunchVC(viewModel: viewModel)
         launchesVC.title = self.viewModel.titleRocket
         navigationController?.pushViewController(launchesVC, animated: true)
     }
     
     // MARK: - CollectionView Sections and CompositionalLayout
     
-    func createLayout() -> UICollectionViewCompositionalLayout {
+    private func createLayout() -> UICollectionViewCompositionalLayout {
         UICollectionViewCompositionalLayout { [weak self] sectionIndex, _  in
            guard let self = self else { return nil }
             switch sectionIndex  {
@@ -154,16 +157,16 @@ extension MainRocketVC: UICollectionViewDataSource {
         }
     }
     
-    func createTopSection() -> NSCollectionLayoutSection {
+    private func createTopSection() -> NSCollectionLayoutSection {
         let width = UIScreen.main.bounds.width
-        let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(width)))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .absolute(width), heightDimension: .absolute(width)), subitems: [item])
+        let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(340)))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .absolute(width), heightDimension: .absolute(340)), subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         section.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
         return section
     }
 
-    func createHorizontalScrollSection() -> NSCollectionLayoutSection {
+    private func createHorizontalScrollSection() -> NSCollectionLayoutSection {
         let width = UIScreen.main.bounds.width
         let margins: CGFloat = 10
         let countOfCells: CGFloat = 3
@@ -178,21 +181,23 @@ extension MainRocketVC: UICollectionViewDataSource {
         section.contentInsets = .init(top: 20, leading: margins, bottom: 0, trailing: 0)
         return section
     }
-    func createVerticalTableSection() -> NSCollectionLayoutSection {
+    private func createVerticalTableSection() -> NSCollectionLayoutSection {
         let width = UIScreen.main.bounds.width
         let margins: CGFloat = 10
         let countOfCells: CGFloat = 9
         let allMargins = countOfCells * margins
-        let heightForCell: CGFloat = 30 // нужно знать как делать динамическую высоту для разных ячеек
+        let heightForCell: CGFloat = 40 // нужно знать как делать динамическую высоту для разных ячеек
         let heightForSection = heightForCell * countOfCells + allMargins
-        let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .absolute(width), heightDimension: .absolute(heightForCell)))
-        let group = NSCollectionLayoutGroup.vertical(layoutSize: .init(widthDimension: .absolute(width), heightDimension: .absolute(heightForSection)), subitems: [item])
+        let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .absolute(width), heightDimension: .estimated(30)))
+        // использовал тут estimated. - уместно?
+        let group = NSCollectionLayoutGroup.vertical(layoutSize: .init(widthDimension: .absolute(width), heightDimension: .estimated(heightForSection)), subitems: [item])
         group.interItemSpacing = .fixed(margins)
+        
         let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .continuous
+        section.contentInsets = .init(top: 20, leading: 0, bottom: 0, trailing: 0)
         return section
     }
-    func createButtonSection() -> NSCollectionLayoutSection {
+    private func createButtonSection() -> NSCollectionLayoutSection {
         let height: CGFloat = 50
         let width: CGFloat = UIScreen.main.bounds.width - globalMargins * 2
         let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(50)))
@@ -201,6 +206,7 @@ extension MainRocketVC: UICollectionViewDataSource {
         section.contentInsets = .init(top: 20, leading: globalMargins, bottom: 20, trailing: 0)
         return section
     }
+    
     
 }
 

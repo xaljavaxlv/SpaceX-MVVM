@@ -7,9 +7,9 @@
 
 import Foundation
 
-class RocketDataProvider {
-
-    var rockets: [RocketModel]?{
+final class RocketDataProvider {
+    private let networkLayer = NetworkLayer()
+    private var rockets: [RocketModel]?{
         didSet{
             guard let rockets = rockets else { return }
             self.delegate.getRocketData(rockets: rockets)
@@ -24,7 +24,7 @@ class RocketDataProvider {
     func fetchRockets() {
         let urlRocketApiString = "https://api.spacexdata.com/v4/rockets"
         let urlRocketApi = URL(string: urlRocketApiString)!
-        let task = URLSession.shared.rocketTask(with: urlRocketApi) { [weak self] rocketModel, response, error in
+        let task = networkLayer.rocketTask(with: urlRocketApi) { [weak self] rocketModel, _, error in
             if let rocketModel = rocketModel{
                 //Thread.sleep(forTimeInterval: 2) //simulates loading large data
                 DispatchQueue.main.async {

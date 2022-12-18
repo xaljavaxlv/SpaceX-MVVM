@@ -8,25 +8,25 @@
 import Foundation
 
 class LaunchDataProvider {
+    private let networkLayer = NetworkLayer()
     
-    var launches: [LaunchesModel]? {
-        didSet{
-            guard let launches = launches else { return }
-            guard let delegate = delegate else { return }
-            delegate.getLaunches(launches: launches)
-        }
+    private func launchTask(with url: URL, completionHandler: @escaping ([LaunchModel]?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
+        networkLayer.decodableTask(with: url, completionHandler: completionHandler)
     }
-    var completion = ((([LaunchesModel]) -> ()).self) // все ок???
-    weak var delegate: LaunchesVCViewModelProtocol?
-    func fetchLaunches(completion: @escaping ([LaunchesModel]) -> ()) {
+    
+    public func fetchLaunches(completion: @escaping ([LaunchModel]) -> ()) {
         let urlLaunchApiString = "https://api.spacexdata.com/v4/launches"
         let urlLaunchApi = URL(string: urlLaunchApiString)!
-        let task = URLSession.shared.launchTask(with: urlLaunchApi) { launchModel, response, error in
+        let task = launchTask(with: urlLaunchApi) { launchModel, response, error in
+            print("lsunchmodel - \(launchModel)")
             if let launchModel = launchModel {
                 //Thread.sleep(forTimeInterval: 1) //simulates loading large data
                 DispatchQueue.main.async {
                     completion(launchModel)
+                    print(launchModel)
                 }
+            } else {
+                print("error - \(error)")
             }
         }
         task.resume()

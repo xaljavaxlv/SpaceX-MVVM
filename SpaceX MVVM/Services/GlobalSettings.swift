@@ -7,4 +7,4 @@
 
 import UIKit
 
-let globalMargins: CGFloat = 32
+let globalMargins: CGFloat = 20

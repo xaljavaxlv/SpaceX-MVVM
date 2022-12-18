@@ -7,17 +7,17 @@
 
 import Foundation
 
-struct LaunchesModel: Codable {
+struct LaunchModel: Decodable {
     let name: String?
     let rocket: String
     let dateLocal: Date?
     let success: Bool?
     let id: String
-    enum CodingKeys: String, CodingKey {
-        case name
-        case rocket
-        case dateLocal = "date_local"
-        case success
-        case id
-    }
+//    enum CodingKeys: String, CodingKey {
+//        case name
+//        case rocket
+//        case dateLocal = "date_local"
+//        case success
+//        case id
+//    }
 }

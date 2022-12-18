@@ -22,18 +22,18 @@ extension MainPageVC: MainPageVCProtocol {
     }
 }
 
-class MainPageVC: UIPageViewController {
+final class MainPageVC: UIPageViewController {
     
-    var rocketViewControllers = [MainRocketVC]() // хотел сделать через протокол но в методах датасорса не находит
-    var dataProvider: RocketDataProvider!
-    var rockets: [RocketModel]? {
+    private var rocketViewControllers = [RocketVC]() // хотел сделать через протокол но в методах датасорса не находит
+    private var dataProvider: RocketDataProvider!
+    private var rockets: [RocketModel]? {
         didSet {
             createRocketVCList()
             setViewControllers([rocketViewControllers[0]], direction: .forward, animated: true)
             spinner.stopAnimating()
         }
     }
-    var spinner = UIActivityIndicatorView(style: .large)
+    private var spinner = UIActivityIndicatorView(style: .large)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +42,7 @@ class MainPageVC: UIPageViewController {
     }
     
     
-    func startSpinner() {
+    private func startSpinner() {
         spinner.frame.size.height = 50
         spinner.frame.size.width = 50
         spinner.center = view.center
@@ -50,15 +50,15 @@ class MainPageVC: UIPageViewController {
         spinner.startAnimating()
     }
     
-    func setDataProvider() {
+    private func setDataProvider() {
         dataProvider = RocketDataProvider()
         dataProvider.delegate = self
     }
     
-    func createRocketVCList() {
+    private func createRocketVCList() {
         guard let rockets = rockets else { return }
         for rocket in rockets {
-            let newRocketVC = MainRocketVC(rocket: rocket)
+            let newRocketVC = RocketVC(rocket: rocket)
             newRocketVC.mainPageVC = self
             rocketViewControllers.append(newRocketVC)
         }
@@ -84,7 +84,7 @@ class MainPageVC: UIPageViewController {
 
 extension MainPageVC: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let viewController = viewController as? MainRocketVC else { return nil }
+        guard let viewController = viewController as? RocketVC else { return nil }
         if let  index = rocketViewControllers.firstIndex(of: viewController) {
             if index > 0 {
                 return rocketViewControllers[index - 1]
@@ -94,7 +94,7 @@ extension MainPageVC: UIPageViewControllerDataSource, UIPageViewControllerDelega
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let viewController = viewController as? MainRocketVC else { return nil }
+        guard let viewController = viewController as? RocketVC else { return nil }
         if let  index = rocketViewControllers.firstIndex(of: viewController) {
            guard let rockets = rockets else { return nil}
             if index < rockets.count - 1 {

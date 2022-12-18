@@ -8,10 +8,28 @@
 import Foundation
 
 // MARK: - URLSession response handlers
-extension URLSession {
-
+class NetworkLayer {
+    
+//    var decoder: JSONDecoder {
+//        let decoder = JSONDecoder()
+//        decoder.keyDecodingStrategy = .convertFromSnakeCase
+//        return decoder
+//    }
+    
+    func decodableTask<T: Decodable>(with url: URL, completionHandler: @escaping (T?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
+        return URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil else {
+                completionHandler(nil, response, error)
+                return
+            }
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            completionHandler(try? decoder.decode(T.self, from: data), response, nil)
+        }
+    }
+    
     func codableTask<T: Codable>(with url: URL, completionHandler: @escaping (T?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
-        return self.dataTask(with: url) { data, response, error in
+        return URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
                 completionHandler(nil, response, error)
                 return
@@ -19,13 +37,11 @@ extension URLSession {
             completionHandler(try? newJSONDecoder().decode(T.self, from: data), response, nil)
         }
     }
-
+    
     func rocketTask(with url: URL, completionHandler: @escaping ([RocketModel]?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
         return self.codableTask(with: url, completionHandler: completionHandler)
     }
-    func launchTask(with url: URL, completionHandler: @escaping ([LaunchesModel]?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
-        return self.codableTask(with: url, completionHandler: completionHandler)
-    }
+    
 }
 
 // MARK: - Helper functions for creating encoders and decoders
