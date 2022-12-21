@@ -8,18 +8,18 @@
 import UIKit
 
 final class RocketLaunchButtonCell: UICollectionViewCell {
-    
+
     public let button = UIButton()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         createButton()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func createButton() {
         contentView.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false

@@ -8,39 +8,42 @@
 import UIKit
 
 final class RocketTopCell: UICollectionViewCell {
-    
+
     private let imageView = UIImageView()
     private let bottomView = UIView()
     public let titleLabel = UILabel()
     private let settingsButton = UIButton()
-    
-    var navVC: UINavigationController? // добавить в инит и поставить приват
-    weak var delegate: RocketVCProtocol? // добавить в инит и поставить приват
-    
+    weak public var delegate: RocketVCProtocol! // добавить в инит и поставить приват
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setCell()
+        setCellViews()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    private func setCell() {
+
+    public func setCell(title: String, delegate: RocketVCProtocol) {
+        titleLabel.text = title
+        self.delegate = delegate
+    }
+
+    private func setCellViews() {
         setContentView()
         setImage()
         setBottomView()
         setTitleLabel()
         setSettingsButton()
     }
-    
+
     private func setContentView() {
         contentView.backgroundColor = .black
         contentView.addSubview(imageView)
         contentView.addSubview(bottomView)
-        
+
     }
-    
+
     private func setImage() {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 0).isActive = true
@@ -51,9 +54,8 @@ final class RocketTopCell: UICollectionViewCell {
         imageView.image = image
         imageView.clipsToBounds = true
         imageView.contentMode = .top
-        
     }
-    
+
     private func setBottomView() {
         bottomView.translatesAutoresizingMaskIntoConstraints = false
         bottomView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 0).isActive = true
@@ -65,7 +67,7 @@ final class RocketTopCell: UICollectionViewCell {
         bottomView.addSubview(titleLabel)
         bottomView.addSubview(settingsButton)
     }
-    
+
     private func setTitleLabel() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.leftAnchor.constraint(equalTo: bottomView.leftAnchor, constant: globalMargins).isActive = true
@@ -86,11 +88,11 @@ final class RocketTopCell: UICollectionViewCell {
         settingsButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         settingsButton.addTarget(self, action: #selector(settingsButtonAction), for: .touchUpInside)
     }
-    
+
     @objc private func settingsButtonAction() {
         guard let delegate = delegate else { return }
         let settingsVC = SettingsVC(viewModel: SettingsViewModel(), delegate: delegate)
         let settingsNavContr = UINavigationController(rootViewController: settingsVC)
-        navVC?.present(settingsNavContr, animated: true)
+        delegate.navigationController?.present(settingsNavContr, animated: true)
     }
 }

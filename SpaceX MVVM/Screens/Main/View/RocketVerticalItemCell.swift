@@ -8,17 +8,17 @@
 import UIKit
 
 final class RocketVerticalItemCell: UICollectionViewCell {
-    
+
     private let leftLabel = UILabel()
     private let valueLabel = UILabel()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setView()
         setLeftLabel()
         setRightLabel()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -39,6 +39,7 @@ final class RocketVerticalItemCell: UICollectionViewCell {
         leftLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         leftLabel.textColor = .white
     }
+
     private func setRightLabel() {
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
         valueLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -globalMargins).isActive = true

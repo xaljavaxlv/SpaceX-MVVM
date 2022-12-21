@@ -6,29 +6,24 @@
 //
 
 import Foundation
+import os
 
 class LaunchDataProvider {
     private let networkLayer = NetworkLayer()
-    
-    private func launchTask(with url: URL, completionHandler: @escaping ([LaunchModel]?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
-        networkLayer.decodableTask(with: url, completionHandler: completionHandler)
-    }
-    
-    public func fetchLaunches(completion: @escaping ([LaunchModel]) -> ()) {
-        let urlLaunchApiString = "https://api.spacexdata.com/v4/launches"
-        let urlLaunchApi = URL(string: urlLaunchApiString)!
-        let task = launchTask(with: urlLaunchApi) { launchModel, response, error in
-            print("lsunchmodel - \(launchModel)")
-            if let launchModel = launchModel {
-                //Thread.sleep(forTimeInterval: 1) //simulates loading large data
+    private let url = "https://api.spacexdata.com/v4/launches"
+    private let logger = Logger()
+
+    func fetchLaunches(completion: @escaping ([LaunchModel]) -> Void) {
+        networkLayer.loadData(url: url, modelType: [LaunchModel].self) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let launches):
                 DispatchQueue.main.async {
-                    completion(launchModel)
-                    print(launchModel)
+                    completion(launches)
                 }
-            } else {
-                print("error - \(error)")
+            case .failure(let error):
+                self.logger.log(" fetchLaunches felt with error \(error.localizedDescription)")
             }
         }
-        task.resume()
     }
 }

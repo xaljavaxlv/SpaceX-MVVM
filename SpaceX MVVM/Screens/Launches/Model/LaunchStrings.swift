@@ -8,13 +8,12 @@
 import Foundation
 
 struct LaunchStrings {
-    
+
     let name: String
     let date: String
     let imageName: Image
-    
+
     enum Image: String {
         case rocketdown, rocketup, unknown
     }
 }
-

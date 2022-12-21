@@ -7,32 +7,30 @@
 
 import UIKit
 
-
-
 protocol RocketViewModelProtocol: AnyObject {
     var verticalValues: [StringsRocketModel] { get set }
     var horizontalValues: [StringsRocketModel] { get set }
     var titleRocket: String { get }
     var numberOfItemsForHorizontal: Int { get }
     var numberOfItemsForVertical: Int { get }
-    init(viewController: RocketVCProtocol, rocket: RocketModel)
+    var viewController: RocketVCProtocol! { get set }
+    init(rocket: RocketModel)
     func updateHorizontalData()
     func rocketName() -> String
 }
 
 extension RocketViewModel: RocketViewModelProtocol {
+
     func rocketName() -> String {
         guard let rocket = rocket else { return "" }
         return rocket.id
     }
-
-
 }
 
 // MARK: - Start
 
 final class RocketViewModel {
-    private weak var viewController: RocketVCProtocol!
+    public weak var viewController: RocketVCProtocol!
     private let settings = UserSettings.shared
     private var rocket: RocketModel? {
         didSet {
@@ -42,15 +40,13 @@ final class RocketViewModel {
             viewController.reload()
         }
     }
-    
     public var verticalValues = [StringsRocketModel]()
     public var horizontalValues = [StringsRocketModel]()
     public var titleRocket = "Loading..."
     public var numberOfItemsForHorizontal: Int { horizontalValues.count }
     public var numberOfItemsForVertical: Int { verticalValues.count }
-    
-    required init(viewController: RocketVCProtocol, rocket: RocketModel) {
-        self.viewController = viewController
+
+    required init(rocket: RocketModel) {
         self.rocket = rocket
         updateRocketTitle()
         updateHorizontalData()
@@ -61,7 +57,8 @@ final class RocketViewModel {
         guard let rocket = rocket else { return }
         titleRocket = rocket.name
     }
-    
+
+// MARK: - Horizontal Data
 
     public func updateHorizontalData() {
         horizontalValues.removeAll()
@@ -73,7 +70,7 @@ final class RocketViewModel {
             horizontalValues.append(data)
         }
     }
-    
+
     private func getValue(dimension: DimensionsKeys, measure: String) -> String {
         guard let rocket = rocket else { return "n/a"}
         switch dimension {
@@ -96,7 +93,7 @@ final class RocketViewModel {
                 return "\(rocket.mass.kg)"
             }
         case .payload:
-            guard let filtered = rocket.payloadWeights.filter ({$0.id == "leo"}).first else { return "n/a"}
+            guard let filtered = rocket.payloadWeights.filter({$0.id == "leo"}).first else { return "n/a"}
             if measure == Weights.pound.rawValue {
                 return "\(String(describing: filtered.lb))"
             } else {
@@ -104,44 +101,10 @@ final class RocketViewModel {
             }
         }
     }
-    
-    private enum VerticalCells: CaseIterable {
-        case firsLaunch
-        case country
-        case launchCost
-        case firstStageEngines
-        case firstStageFuelData
-        case firstStageBurnData
-        case secondStageEngines
-        case secondStageFuelData
-        case secondStageBurnData
-        
-        var title: String {
-            switch self {
-            case .firsLaunch: return "First Flight"
-            case .country: return "Country"
-            case .launchCost: return "Cost per launch"
-            case .firstStageEngines: return "Engines"
-            case .firstStageFuelData: return "Fuel Amount"
-            case .firstStageBurnData: return "Burn time"
-            case .secondStageEngines: return "Engines"
-            case .secondStageFuelData: return "Fuel Amount"
-            case .secondStageBurnData: return "Burn time"
-            }
-        }
-        
-        var mesure: String {
-            switch self {
-            case .firstStageFuelData: return "ton"
-            case .firstStageBurnData: return "sec"
-            case .secondStageFuelData: return "ton"
-            case .secondStageBurnData: return "sec"
-            default: return ""
-            }
-        }
-    }
-    
-    private  func updateVerticalData() {
+
+// MARK: - Vertical Data
+
+    private func updateVerticalData() {
         for cell in VerticalCells.allCases {
             var data = StringsRocketModel()
             data.tittle = cell.title
@@ -150,7 +113,8 @@ final class RocketViewModel {
             verticalValues.append(data)
         }
     }
-        
+// SwiftLint complains : Cyclomatic Complexity Violation: Function should have complexity 10 or less: currently complexity equals 12 (cyclomatic_complexity)
+
     private func getValueForVerticalData(cell: VerticalCells) -> String {
         guard let rocket = rocket else { return "n/a" }
         switch cell {
@@ -161,24 +125,21 @@ final class RocketViewModel {
         case .firstStageFuelData: return String(rocket.secondStage.fuelAmountTons)
         case .firstStageBurnData:
             var value = "n/a"
-            if (rocket.firstStage.burnTimeSEC != nil) {
-                value = "\(String(describing: rocket.firstStage.burnTimeSEC!))"
+            if rocket.firstStage.burnTimeSec != nil {
+                value = "\(String(describing: rocket.firstStage.burnTimeSec!))"
             }
             return value
         case .secondStageEngines: return String(rocket.secondStage.engines)
         case .secondStageFuelData: return String(rocket.secondStage.fuelAmountTons)
         case .secondStageBurnData:
             var value = "n/a"
-            if (rocket.secondStage.burnTimeSEC != nil) {
-                value = "\(String(describing: rocket.secondStage.burnTimeSEC!))"
+            if rocket.secondStage.burnTimeSec != nil {
+                value = "\(String(describing: rocket.secondStage.burnTimeSec!))"
             }
             return value
         }
     }
-    
-    
-    //MARK: - Horizontal List Data
-    
+    // MARK: - Horizontal List Data
 //    func prepareHorizontalValues() {
 //        horizontalValues.removeAll()
 //        addHeightData()
@@ -186,7 +147,7 @@ final class RocketViewModel {
 //        addMassData()
 //        addPayloadData()
 //    }
-    
+
 //    func addHeightData() {
 //        guard let rocket = rocket else { return }
 //        var data = StringsModel()
@@ -263,8 +224,7 @@ final class RocketViewModel {
 //    }
 //
 
-    
-    //MARK: - Vertical List Data
+    // MARK: - Vertical List Data
 //    func prepareVerticalValues() {
 //        verticalValues.removeAll()
 //        addFirstLaunchData()
@@ -277,11 +237,7 @@ final class RocketViewModel {
 //        addSecondStageFuelData()
 //        addSecondStageBurnData()
 //    }
-    
-    //MARK: - First Group
-    
-
-
+    // MARK: - First Group
 //    func addFirstLaunchData() {
 //        guard let rocket = rocket else { return }
 //        var data = StringsModel()
@@ -304,7 +260,7 @@ final class RocketViewModel {
 //        verticalValues.append(data)
 //    }
 //
-//    //MARK: - Second Group
+    // MARK: - Second Group
 //
 //    func addFirstStageEnginesData() {
 //        guard let rocket = rocket else { return }
@@ -334,7 +290,7 @@ final class RocketViewModel {
 //        verticalValues.append(data)
 //    }
 //
-//    //MARK: - Third Group
+    // MARK: - Third Group
 //
 //    func addSecondStageEnginesData() {
 //        guard let rocket = rocket else { return }
@@ -365,3 +321,40 @@ final class RocketViewModel {
 //    }
 }
 
+extension RocketViewModel {
+    private enum VerticalCells: CaseIterable {
+        case firsLaunch
+        case country
+        case launchCost
+        case firstStageEngines
+        case firstStageFuelData
+        case firstStageBurnData
+        case secondStageEngines
+        case secondStageFuelData
+        case secondStageBurnData
+
+        var title: String {
+            switch self {
+            case .firsLaunch: return "First Flight"
+            case .country: return "Country"
+            case .launchCost: return "Cost per launch"
+            case .firstStageEngines: return "Engines"
+            case .firstStageFuelData: return "Fuel Amount"
+            case .firstStageBurnData: return "Burn time"
+            case .secondStageEngines: return "Engines"
+            case .secondStageFuelData: return "Fuel Amount"
+            case .secondStageBurnData: return "Burn time"
+            }
+        }
+
+        var mesure: String {
+            switch self {
+            case .firstStageFuelData: return "ton"
+            case .firstStageBurnData: return "sec"
+            case .secondStageFuelData: return "ton"
+            case .secondStageBurnData: return "sec"
+            default: return ""
+            }
+        }
+    }
+}

@@ -6,33 +6,24 @@
 //
 
 import Foundation
+import os
 
 final class RocketDataProvider {
+
     private let networkLayer = NetworkLayer()
-    private var rockets: [RocketModel]?{
-        didSet{
-            guard let rockets = rockets else { return }
-            self.delegate.getRocketData(rockets: rockets)
-        }
-    }
-   weak var delegate: MainPageVCProtocol!  
-    
-   init() {
-        fetchRockets()
-    }
-    
-    func fetchRockets() {
-        let urlRocketApiString = "https://api.spacexdata.com/v4/rockets"
-        let urlRocketApi = URL(string: urlRocketApiString)!
-        let task = networkLayer.rocketTask(with: urlRocketApi) { [weak self] rocketModel, _, error in
-            if let rocketModel = rocketModel{
-                //Thread.sleep(forTimeInterval: 2) //simulates loading large data
+    private let url = "https://api.spacexdata.com/v4/rockets"
+    private let logger = Logger()
+
+    func fetchRockets(completion: @escaping ([RocketModel]) -> Void) {
+        networkLayer.loadData(url: url, modelType: [RocketModel].self) { result in
+            switch result {
+            case .success(let rockets):
                 DispatchQueue.main.async {
-                    self!.rockets = rocketModel
+                    completion(rockets)
                 }
+            case .failure(let error):
+                self.logger.log("fetchRockets felt with error \(error.localizedDescription)")
             }
         }
-        task.resume()
     }
 }
-

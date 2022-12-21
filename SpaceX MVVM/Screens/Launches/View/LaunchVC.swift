@@ -11,23 +11,22 @@ protocol LaunchVCProtocol: AnyObject {
     func reload()
 }
 
-
 final class LaunchVC: UIViewController {
-    
+
     private let tableView = UITableView()
     private var viewModel: LaunchVCViewModelProtocol!
     private let spinner = UIActivityIndicatorView(style: .large)
-    
+
     init(viewModel: LaunchVCViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         self.viewModel.viewController = self
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         createTableView()
@@ -35,6 +34,7 @@ final class LaunchVC: UIViewController {
         startSpinner()
         setTitle()
     }
+
     private func createTableView() {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -47,9 +47,11 @@ final class LaunchVC: UIViewController {
         tableView.backgroundColor = .black
         tableView.separatorColor = .clear
     }
+
     private func registerCells() {
         tableView.register(LaunchCell.self, forCellReuseIdentifier: "CellForLaunches")
     }
+
     private  func startSpinner() {
         view.addSubview(spinner)
         spinner.translatesAutoresizingMaskIntoConstraints = false
@@ -59,25 +61,30 @@ final class LaunchVC: UIViewController {
         spinner.heightAnchor.constraint(equalToConstant: 50).isActive = true
         spinner.startAnimating()
     }
+
     private func setTitle() {
-        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
+        let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
 }
+
+// MARK: - UITableViewDataSource
 
 extension LaunchVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.launchStrings.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CellForLaunches") as? LaunchCell
-        guard let cell = cell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: "CellForLaunches") as? LaunchCell else { return UITableViewCell() }
         let launchStrings = viewModel.launchStrings
         cell.updateContent(model: launchStrings[indexPath.row])
         return cell
     }
 }
+
+// MARK: - Conforming LaunchVCProtocol
 
 extension LaunchVC: LaunchVCProtocol {
     func reload() {

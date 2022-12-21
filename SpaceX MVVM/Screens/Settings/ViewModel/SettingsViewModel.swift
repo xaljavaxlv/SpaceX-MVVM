@@ -15,7 +15,7 @@ protocol SettingsViewModelProtocol {
 final class SettingsViewModel: SettingsViewModelProtocol {
 
     public var settingsStrings = [SettingsStrings]()
-    
+
     init() {
         createSettingsStrings()
     }
@@ -31,11 +31,14 @@ final class SettingsViewModel: SettingsViewModelProtocol {
             if settings.getDimensionValue(for: dimension) == titlesLR[1] {
                 segmentIndex = 1
             }
-            let settingString = SettingsStrings(dimension: dimension, segmentLeftTitle: titlesLR[0], segmentRightLabel: titlesLR[1], segmentIndex: segmentIndex)
+            let settingString = SettingsStrings(dimension: dimension,
+                                                segmentLeftTitle: titlesLR[0],
+                                                segmentRightLabel: titlesLR[1],
+                                                segmentIndex: segmentIndex)
             settingsStrings.append(settingString)
         }
     }
-    
+
     public func saveNewSettings(segmentIndex: Int, dimension: DimensionsKeys) {
         var values = [Lenghts.meters.rawValue, Lenghts.feets.rawValue]
         if dimension == DimensionsKeys.mass || dimension == DimensionsKeys.payload {
@@ -43,7 +46,7 @@ final class SettingsViewModel: SettingsViewModelProtocol {
         }
         UserSettings.shared.saveNewDimensionValue(value: values[segmentIndex], dimension: dimension)
     }
-    
+
 //    func updateSegmentIndex(segmentIndex: Int, dimension: DimensionsKeys) {
 //        guard let index = settingsStrings.firstIndex(where: {$0.dimension == dimension }) else { return }
 //        settingsStrings[index].segmentIndex = segmentIndex
