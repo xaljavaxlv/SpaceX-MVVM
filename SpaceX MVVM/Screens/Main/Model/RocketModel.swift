@@ -1,8 +1,8 @@
 //
 //  RocketModel.swift
 //  SpaceX MVVM
-//  https://app.quicktype.io/ https://codebeautify.org/json-decode-online
-//  Created by Vlad Zavada on 12/4/22.
+//
+//  Created by Vlad Zavada on 12/23/22.
 
 import Foundation
 

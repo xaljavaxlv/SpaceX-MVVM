@@ -1,13 +1,13 @@
 //
-//  LaunchStrings.swift
+//  LaunchCellItem.swift
 //  SpaceX MVVM
 //
-//  Created by Vlad Zavada on 12/17/22.
+//  Created by Vlad Zavada on 12/24/22.
 //
 
 import Foundation
 
-struct LaunchStrings {
+struct LaunchCellItem {
 
     let name: String
     let date: String

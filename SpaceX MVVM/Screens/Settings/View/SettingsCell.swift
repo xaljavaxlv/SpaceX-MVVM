@@ -2,7 +2,7 @@
 //  CellForSettings.swift
 //  SpaceX MVVM
 //
-//  Created by Vlad Zavada on 12/7/22.
+//  Created by Vlad Zavada on 12/24/22.
 //
 
 import UIKit
@@ -25,6 +25,15 @@ final class SettingsCell: UITableViewCell {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func updateStrings(model: SettingsCellItem, viewController: SettingsVCProtocol) {
+        self.viewController = viewController
+        leftLabel.text = model.dimension.rawValue.capitalized
+        segmentControl.setTitle(model.segmentLeftTitle, forSegmentAt: 0)
+        segmentControl.setTitle(model.segmentRightLabel, forSegmentAt: 1)
+        segmentControl.selectedSegmentIndex = model.segmentIndex
+        dimension = model.dimension
     }
 
     private func createLeftLabel() {
@@ -54,14 +63,4 @@ final class SettingsCell: UITableViewCell {
         let index = segmentControl.selectedSegmentIndex
         viewController.updateSavedSettings(segmentIndex: index, dimension: dimension)
     }
-
-    public func updateStrings(model: SettingsStrings, viewController: SettingsVCProtocol) {
-        self.viewController = viewController
-        leftLabel.text = model.dimension.rawValue.capitalized
-        segmentControl.setTitle(model.segmentLeftTitle, forSegmentAt: 0)
-        segmentControl.setTitle(model.segmentRightLabel, forSegmentAt: 1)
-        segmentControl.selectedSegmentIndex = model.segmentIndex
-        dimension = model.dimension
-    }
-
 }

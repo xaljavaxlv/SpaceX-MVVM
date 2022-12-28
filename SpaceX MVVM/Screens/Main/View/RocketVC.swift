@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  SpaceX MVVM
 //
-//  Created by Vlad Zavada on 12/5/22.
+//  Created by Vlad Zavada on 12/23/22.
 //
 
 import UIKit
@@ -18,13 +18,17 @@ final class RocketVC: UIViewController {
 
     private var collectionView: UICollectionView!
     public weak var mainPageVC: MainPageVCProtocol?
-    private var viewModel: RocketViewModelProtocol! // не добавил в инит потому что нужно передать себя во вью модел
+    private var viewModel: RocketViewModelProtocol!
+    typealias DataSource = UICollectionViewDiffableDataSource<RocketSectionModel, RocketItemType>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<RocketSectionModel, RocketItemType>
+    private lazy var dataSource = createDataSource()
 
     init(viewModel: RocketViewModelProtocol) {
         super.init(nibName: nil, bundle: nil)
         setupScreen()
         self.viewModel = viewModel
         viewModel.viewController = self
+        applySnapshot(animatingDifferences: false)
     }
 
     required init?(coder: NSCoder) {
@@ -43,80 +47,147 @@ final class RocketVC: UIViewController {
         collectionView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
         collectionView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
                                               constant: 0).isActive = true
-        // TODO: -70 это правильно? Навигейшн белый при скроле
         collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: -70).isActive = true //
         collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
                                                constant: 0).isActive = true
-        collectionView.bounces = false // не уверен - проверить что это вообще такое
-        collectionView.dataSource = self
+//        collectionView.bounces = false // не уверен - проверить что это вообще такое
+        //collectionView.dataSource = self
         collectionView.backgroundColor = .black
         registerCells()
     }
 
     private func registerCells() {
-        self.collectionView.register(RocketTopCell.self, forCellWithReuseIdentifier: "CellForTop")
-        self.collectionView.register(RocketVerticalItemCell.self, forCellWithReuseIdentifier: "CellForVerticalItem")
-        self.collectionView.register(RocketHorizontalItemCell.self, forCellWithReuseIdentifier: "CellForHorizontalItem")
-        self.collectionView.register(RocketLaunchButtonCell.self, forCellWithReuseIdentifier: "CellForButton")
+        collectionView.register(RocketTopCell.self, forCellWithReuseIdentifier: "CellForTop")
+        collectionView.register(RocketHorizontalItemCell.self, forCellWithReuseIdentifier: "CellForHorizontalItem")
+        collectionView.register(RocketVerticalGeneralCell.self, forCellWithReuseIdentifier: "CellForVerticalItem")
+        collectionView.register(RocketVerticalStagesCell.self,
+                                     forCellWithReuseIdentifier: "RocketVerticalFirstStageCell")
+        collectionView.register(RocketLaunchButtonCell.self, forCellWithReuseIdentifier: "CellForButton")
+//        collectionView.register(RocketVerticalStageHeader.self, forSupplementaryViewOfKind: "RocketVerticalStageHeader", withReuseIdentifier: "RocketVerticalStageHeader")
+        collectionView.register(RocketVerticalStageHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "RocketVerticalStageHeader")
+
     }
 }
+
+// MARK: - UICollectionView Diffable DataSource
+extension RocketVC {
+    func createDataSource() -> DataSource {
+        let dataSource = DataSource( collectionView: collectionView,
+                                     cellProvider: { [weak self] (collectionView, indexPath, item) -> UICollectionViewCell? in
+            //          let cell = collectionView.dequeueReusableCell( // эту херь перебираем в свитч кейсах по item/ aka video 6.49
+            //            withReuseIdentifier: "VideoCollectionViewCell",
+            //            for: indexPath) as? VideoCollectionViewCell
+            //          cell?.video = video
+            //          return cell
+            guard let self = self else { return nil }
+            switch item {
+            case .header(title: let title, image: let image):
+                return self.createCellForHeader(indexPath: indexPath, title: title, imageUrl: image)
+            case .info(cellItem: let cellItem):
+                return self.createCellForHorizontalItems(indexPath: indexPath, cellItem: cellItem)
+            case .button:
+                return self.createCellForButton(indexPath: indexPath)
+            }
+        })
+        return dataSource
+    }
+
+    func applySnapshot(animatingDifferences: Bool = true) {
+        var snapshot = Snapshot()
+        snapshot.appendSections(viewModel.sections)
+        viewModel.sections.forEach { section in
+            snapshot.appendItems(section.items, toSection: section)
+        }
+        dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
+    }
+}
+
+
 // MARK: - UICollectionViewDataSource
-extension RocketVC: UICollectionViewDataSource {
+extension RocketVC { // : UICollectionViewDataSource
 
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        4
-    }
+//    func numberOfSections(in collectionView: UICollectionView) -> Int {
+//        6
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        switch section {
+//        case 0: return 1
+//        case 1: return viewModel.horizontalValues.count
+//        case 2: return viewModel.verticalGeneralValues.count
+//        case 3: return viewModel.verticalFirstStageValues.count
+//        case 4: return viewModel.verticalSecondStageValues.count
+//        case 5: return 1
+//        default: return 0
+//        }
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView,
+//                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        switch indexPath.section {
+//        case 0: return createCellForHeader(indexPath: indexPath)
+//        case 1: return createCellForHorizontalItems(indexPath: indexPath)
+//        case 2: return createCellForVerticalGeneralItems(indexPath: indexPath)
+//        case 3: return createCellForVerticalFirstSectionItems(indexPath: indexPath)
+//        case 4: return createCellForVerticalSecondSectionItems(indexPath: indexPath)
+//        case 5: return createCellForButton(indexPath: indexPath)
+//        default: return createCellForHeader(indexPath: indexPath)
+//        }
+//    }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch section {
-        case 0: return 1
-        case 1: return viewModel.numberOfItemsForHorizontal
-        case 2: return viewModel.numberOfItemsForVertical
-        case 3: return 1
-        default: return 0
-        }
-    }
-
-    func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch indexPath.section {
-        case 0: return createCellForTop(indexPath: indexPath)
-        case 1: return createCellForHorizontalItems(indexPath: indexPath)
-        case 2: return createCellForVerticalItems(indexPath: indexPath)
-        case 3: return createCellForButton(indexPath: indexPath)
-        default: return createCellForTop(indexPath: indexPath)
-        }
-    }
-// MARK: - Creating Cells
-    // TODO: - nav VC - сделает ретейн сайкл? Узнать у Антона
-    private func createCellForTop(indexPath: IndexPath) -> UICollectionViewCell {
+    private func createCellForHeader(indexPath: IndexPath, title: String, imageUrl: URL) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "CellForTop", for: indexPath) as? RocketTopCell else { return UICollectionViewCell() }
-    cell.setCell(title: viewModel.titleRocket, delegate: self)
+    cell.setCell(title: title, delegate: self)
         return cell
     }
 
-    private func createCellForHorizontalItems(indexPath: IndexPath) -> UICollectionViewCell {
+    private func createCellForHorizontalItems(indexPath: IndexPath, cellItem: RocketCellItem) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "CellForHorizontalItem",
             for: indexPath) as? RocketHorizontalItemCell else { return UICollectionViewCell() }
 
-        let model = viewModel.horizontalValues
-        if model.count > 0 {
-            cell.updateLabelsText(model: model[indexPath.row])
-        }
+//        let model = viewModel.horizontalValues
+//        if model.count > 0 {
+//            cell.updateLabelsText(model: model[indexPath.row])
+//        }
+        cell.updateLabelsText(model: cellItem)
         return cell
     }
 
-    private func createCellForVerticalItems(indexPath: IndexPath) -> UICollectionViewCell {
+    private func createCellForVerticalGeneralItems(indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "CellForVerticalItem",
-            for: indexPath) as? RocketVerticalItemCell else { return UICollectionViewCell() }
+            withReuseIdentifier: "CellForVerticalItem", // CellForVerticalItem
+            for: indexPath) as? RocketVerticalGeneralCell else { return UICollectionViewCell() } // RocketVerticalGeneralCell
 
-        let model = viewModel.verticalValues
-        if model.count > 0 {
-            cell.setCell(model: model[indexPath.row])
-        }
+//        let model = viewModel.verticalGeneralValues
+//        if model.count > 0 {
+//            cell.setCell(model: model[indexPath.row])
+//        }
+        return cell
+    }
+
+    private func createCellForVerticalFirstSectionItems(indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: "RocketVerticalFirstStageCell",
+            for: indexPath) as? RocketVerticalStagesCell else { return UICollectionViewCell() }
+
+//        let model = viewModel.verticalFirstStageValues
+//        if model.count > 0 {
+//            cell.setCell(model: model[indexPath.row])
+//        }
+        return cell
+    }
+
+    private func createCellForVerticalSecondSectionItems(indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: "RocketVerticalFirstStageCell",
+            for: indexPath) as? RocketVerticalStagesCell else { return UICollectionViewCell() }
+
+//        let model = viewModel.verticalSecondStageValues
+//        if model.count > 0 {
+//            cell.setCell(model: model[indexPath.row])
+//        }
         return cell
     }
 
@@ -129,9 +200,14 @@ extension RocketVC: UICollectionViewDataSource {
     }
 
     @objc private func buttonAction() {
-        let viewModel = LaunchVCViewModel(rocketName: viewModel.rocketName())
-        let launchesVC = LaunchVC(viewModel: viewModel)
-        launchesVC.title = self.viewModel.titleRocket
+        guard let buttonIndex = viewModel.sections.firstIndex(where: ({ $0.type == .button })) else { return }
+        let buttonSection = viewModel.sections[buttonIndex]
+        guard let buttonItem = buttonSection.items.first else { return }
+        // TODO: rename rocketName to rocketId  если все работает ок
+        let launchViewModel = LaunchVCViewModel(rocketName: buttonItem.rocketId)
+        let launchesVC = LaunchVC(viewModel: launchViewModel)
+        guard let title = buttonSection.title else { return }
+        launchesVC.title = title
         navigationController?.pushViewController(launchesVC, animated: true)
     }
 
@@ -143,8 +219,10 @@ extension RocketVC: UICollectionViewDataSource {
             switch sectionIndex {
             case 0: return self.createTopSection()
             case 1: return self.createHorizontalScrollSection()
-            case 2: return self.createVerticalTableSection()
-            case 3: return self.createButtonSection()
+            case 2: return self.createVerticalGeneralSection()
+            case 3: return self.createVerticalStageSection()
+            case 4: return self.createVerticalStageSection()
+            case 5: return self.createButtonSection()
             default: return self.createHorizontalScrollSection()
             }
         }
@@ -181,7 +259,7 @@ extension RocketVC: UICollectionViewDataSource {
         return section
     }
 
-    private func createVerticalTableSection() -> NSCollectionLayoutSection {
+    private func createVerticalGeneralSection() -> NSCollectionLayoutSection {
         let width = UIScreen.main.bounds.width
         let margins: CGFloat = 10
         let countOfCells: CGFloat = 9
@@ -201,6 +279,30 @@ extension RocketVC: UICollectionViewDataSource {
         return section
     }
 
+    private func createVerticalStageSection() -> NSCollectionLayoutSection {
+        let width = UIScreen.main.bounds.width
+        let margins: CGFloat = 10
+        let countOfCells: CGFloat = 9
+        let allMargins = countOfCells * margins
+        let heightForCell: CGFloat = 40
+        let heightForSection = heightForCell * countOfCells + allMargins
+        let item = NSCollectionLayoutItem(layoutSize:
+                .init(widthDimension: .absolute(width), heightDimension: .estimated(30)))
+        // использовал тут estimated. - уместно?
+        let group = NSCollectionLayoutGroup.vertical(layoutSize:
+                .init(widthDimension: .absolute(width),
+                      heightDimension: .estimated(heightForSection)),
+                                                     subitems: [item])
+        group.interItemSpacing = .fixed(margins)
+        let headerItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(30))
+        let headerItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerItemSize, elementKind: "RocketVerticalStageHeader", alignment: .top) // хуйня блять не работает
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.boundarySupplementaryItems = [headerItem]
+        section.contentInsets = .init(top: 20, leading: 0, bottom: 0, trailing: 0)
+        return section
+    }
+
     private func createButtonSection() -> NSCollectionLayoutSection {
         let height: CGFloat = 50
         let width: CGFloat = UIScreen.main.bounds.width - globalMargins * 2
@@ -216,6 +318,7 @@ extension RocketVC: UICollectionViewDataSource {
     }
 }
 
+
 // MARK: - Conforming RocketVCProtocol
 
 extension RocketVC: RocketVCProtocol {
@@ -225,7 +328,8 @@ extension RocketVC: RocketVCProtocol {
     }
 
     func reload() {
-        viewModel.updateHorizontalData()
+//        viewModel.updateHorizontalData()
         collectionView.reloadData()
     }
 }
+

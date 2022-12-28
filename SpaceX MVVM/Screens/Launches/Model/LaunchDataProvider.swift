@@ -2,13 +2,13 @@
 //  LaunchDataProvider.swift
 //  SpaceX MVVM
 //
-//  Created by Vlad Zavada on 12/11/22.
+//  Created by Vlad Zavada on 12/24/22.
 //
 
 import Foundation
 import os
 
-class LaunchDataProvider {
+final class LaunchDataProvider {
     private let networkLayer = NetworkLayer()
     private let url = "https://api.spacexdata.com/v4/launches"
     private let logger = Logger()
@@ -22,7 +22,7 @@ class LaunchDataProvider {
                     completion(launches)
                 }
             case .failure(let error):
-                self.logger.log(" fetchLaunches felt with error \(error.localizedDescription)")
+                self.logger.log("fetchLaunches have not gotten data with error \(error.localizedDescription)")
             }
         }
     }

@@ -2,12 +2,12 @@
 //  SettingsStrings.swift
 //  SpaceX MVVM
 //
-//  Created by Vlad Zavada on 12/17/22.
+//  Created by Vlad Zavada on 12/24/22.
 //
 
 import Foundation
 
-struct SettingsStrings {
+struct SettingsCellItem {
 
     let dimension: DimensionsKeys
     let segmentLeftTitle: String

@@ -2,14 +2,14 @@
 //  CellForButton.swift
 //  SpaceX MVVM
 //
-//  Created by Vlad Zavada on 12/6/22.
+//  Created by Vlad Zavada on 12/23/22.
 //
 
 import UIKit
 
 final class RocketLaunchButtonCell: UICollectionViewCell {
 
-    public let button = UIButton()
+    let button = UIButton()
 
     override init(frame: CGRect) {
         super.init(frame: frame)

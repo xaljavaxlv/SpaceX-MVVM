@@ -2,7 +2,7 @@
 //  CellForLaunches.swift
 //  SpaceX MVVM
 //
-//  Created by Vlad Zavada on 12/11/22.
+//  Created by Vlad Zavada on 12/24/22.
 //
 
 import UIKit
@@ -66,7 +66,7 @@ class LaunchCell: UITableViewCell {
         bottomLabel.textColor = .white
     }
 
-    public func updateContent(model: LaunchStrings) {
+    public func updateContent(model: LaunchCellItem) {
         topLabel.text = model.name
         bottomLabel.text = model.date
         imgView.image = UIImage(named: model.imageName.rawValue)

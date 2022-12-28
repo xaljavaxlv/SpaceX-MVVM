@@ -2,18 +2,18 @@
 //  NetworkLayer.swift
 //  mvvm first
 //  
-//  Created by Vlad Zavada on 12/4/22.
+//  Created by Vlad Zavada on 12/23/22.
 //
 
 import Foundation
 
-class NetworkLayer {
-    var decoder: JSONDecoder {
+final class NetworkLayer {
+    private let decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         decoder.dateDecodingStrategy = .iso8601
         return decoder
-    }
+    }()
 
     func loadData<T: Decodable>(url from: String,
                                 modelType: T.Type,

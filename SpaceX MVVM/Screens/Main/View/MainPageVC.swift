@@ -2,7 +2,7 @@
 //  MainPageVC.swift
 //  SpaceX MVVM
 //
-//  Created by Vlad Zavada on 12/10/22.
+//  Created by Vlad Zavada on 12/23/22.
 //
 
 import UIKit
@@ -14,7 +14,7 @@ protocol MainPageVCProtocol: AnyObject {
 
 final class MainPageVC: UIPageViewController {
 
-    private var rocketViewControllers = [RocketVC]() // хотел сделать через протокол но в методах датасорса не находит
+    private var rocketViewControllers = [RocketVC]()
     private let dataProvider = RocketDataProvider()
     private var rockets: [RocketModel]? {
         didSet {

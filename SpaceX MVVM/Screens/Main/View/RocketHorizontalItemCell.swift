@@ -2,7 +2,7 @@
 //  CellForHorizontalItem.swift
 //  SpaceX MVVM
 //
-//  Created by Vlad Zavada on 12/6/22.
+//  Created by Vlad Zavada on 12/23/22.
 //
 
 import UIKit
@@ -19,6 +19,11 @@ final class RocketHorizontalItemCell: UICollectionViewCell {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func updateLabelsText(model: RocketCellItem) {
+        topLabel.text = model.value ?? "n/a"
+        bottomLabel.text = model.title ?? "n/a"
     }
 
     private func setCell() {
@@ -48,10 +53,5 @@ final class RocketHorizontalItemCell: UICollectionViewCell {
         bottomLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         bottomLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -30).isActive = true
         bottomLabel.textColor = .white
-    }
-
-    public func updateLabelsText(model: StringsRocketModel) {
-        topLabel.text = model.value ?? "n/a"
-        bottomLabel.text = model.tittle ?? "n/a"
     }
 }

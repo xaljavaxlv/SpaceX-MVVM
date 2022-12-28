@@ -2,41 +2,39 @@
 //  LaunchesViewModel.swift
 //  SpaceX MVVM
 //
-//  Created by Vlad Zavada on 12/11/22.
+//  Created by Vlad Zavada on 12/24/22.
 //
 
 import Foundation
 
 protocol LaunchVCViewModelProtocol: AnyObject {
-    var launches: [LaunchModel]? { get }
-    var launchStrings: [LaunchStrings] { get }
+    var launchStrings: [LaunchCellItem] { get }
     var viewController: LaunchVCProtocol? { get set }
 }
 
 final class LaunchVCViewModel: LaunchVCViewModelProtocol {
-    // обязательно final? По умолчанию же сам ставится final под капотом если никто не наследуется
 
     private let dataProvider = LaunchDataProvider()
-    public weak var viewController: LaunchVCProtocol?
-    internal var launches: [LaunchModel]? { // private не дает
+    weak var viewController: LaunchVCProtocol?
+    var launches: [LaunchModel]? {
         didSet {
             prepareStrings()
             guard let viewController = viewController else { return }
             viewController.reload()
         }
     }
-    public var rocketName = "Unknown"
-    public var launchStrings = [LaunchStrings]()
+    let rocketName: String
+    var launchStrings = [LaunchCellItem]()
 
-    required init(rocketName: String) {
+    init(rocketName: String) {
         self.rocketName = rocketName
         dataProvider.fetchLaunches { [weak self] launches in
             guard let self = self else { return }
-                self.launches = launches.filter({ $0.rocket == self.rocketName })
+            self.launches = launches.filter({ $0.rocket == self.rocketName })
         }
     }
 
-    private func prepareStrings() { // так норм или лучше разбить подготовку каждго стринга на отдельную функцию?
+    private func prepareStrings() { // так норм или лучше разбить подготовку каждго стринга на отдельную функцию
         guard let launches = launches else { return  }
         let formatter = DateFormatter()
         formatter.dateStyle = .short
@@ -44,13 +42,13 @@ final class LaunchVCViewModel: LaunchVCViewModelProtocol {
 
         for launch in launches {
             let date = formatter.string(from: launch.dateLocal)
-            var imageName: LaunchStrings.Image
+            var imageName: LaunchCellItem.Image
             switch launch.success {
             case true: imageName = .rocketup
             case false: imageName = .rocketdown
             default: imageName = .unknown
             }
-            let launchString = LaunchStrings(name: launch.name, date: date, imageName: imageName)
+            let launchString = LaunchCellItem(name: launch.name, date: date, imageName: imageName)
             launchStrings.append(launchString)
         }
     }

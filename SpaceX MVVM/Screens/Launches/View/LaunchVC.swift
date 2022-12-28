@@ -2,7 +2,7 @@
 //  LaunchesVC.swift
 //  SpaceX MVVM
 //
-//  Created by Vlad Zavada on 12/11/22.
+//  Created by Vlad Zavada on 12/24/22.
 //
 
 import UIKit
@@ -34,38 +34,6 @@ final class LaunchVC: UIViewController {
         startSpinner()
         setTitle()
     }
-
-    private func createTableView() {
-        view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
-        tableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
-        tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-        tableView.allowsSelection = false
-        tableView.dataSource = self
-        tableView.backgroundColor = .black
-        tableView.separatorColor = .clear
-    }
-
-    private func registerCells() {
-        tableView.register(LaunchCell.self, forCellReuseIdentifier: "CellForLaunches")
-    }
-
-    private  func startSpinner() {
-        view.addSubview(spinner)
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        spinner.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        spinner.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        spinner.startAnimating()
-    }
-
-    private func setTitle() {
-        let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.titleTextAttributes = textAttributes
-    }
 }
 
 // MARK: - UITableViewDataSource
@@ -90,5 +58,41 @@ extension LaunchVC: LaunchVCProtocol {
     func reload() {
         tableView.reloadData()
         spinner.stopAnimating()
+    }
+}
+
+// MARK: - SETUP UI
+private extension LaunchVC {
+
+    func createTableView() {
+        view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
+        tableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
+        tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
+        tableView.allowsSelection = false
+        tableView.dataSource = self
+        tableView.backgroundColor = .black
+        tableView.separatorColor = .clear
+    }
+
+    func registerCells() {
+        tableView.register(LaunchCell.self, forCellReuseIdentifier: "CellForLaunches")
+    }
+
+    func startSpinner() {
+        view.addSubview(spinner)
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        spinner.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        spinner.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        spinner.startAnimating()
+    }
+
+    func setTitle() {
+        let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
 }

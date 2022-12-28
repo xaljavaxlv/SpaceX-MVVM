@@ -2,7 +2,7 @@
 //  SettingsVC.swift
 //  SpaceX MVVM
 //
-//  Created by Vlad Zavada on 12/7/22.
+//  Created by Vlad Zavada on 12/24/22.
 //
 
 import UIKit
@@ -31,47 +31,6 @@ final class SettingsVC: UIViewController {
         super.viewDidLoad()
         setScreen()
     }
-
-    private func setScreen() {
-        view.backgroundColor = .clear
-        view.addSubview(tableView)
-        setNavigationItems()
-        createTableView()
-        registerCell()
-    }
-
-    private func setNavigationItems() {
-        title = "Settings"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
-                                                            style: .done,
-                                                            target: self,
-                                                            action: #selector(closeButtonAction))
-        let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.titleTextAttributes = textAttributes
-        navigationItem.rightBarButtonItem?.setTitleTextAttributes(textAttributes, for: .normal)
-        navigationItem.rightBarButtonItem?.setTitleTextAttributes(textAttributes, for: .highlighted)
-    }
-
-    @objc private func closeButtonAction() {
-        self.dismiss(animated: true)
-    }
-
-    private func createTableView() {
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
-        tableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
-        tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-        tableView.allowsSelection = false
-        tableView.dataSource = self
-        tableView.backgroundColor = .black
-        tableView.separatorColor = .clear
-        tableView.isScrollEnabled = false
-    }
-
-    private func registerCell() {
-        tableView.register(SettingsCell.self, forCellReuseIdentifier: "CellForSettings")
-    }
 }
 
 // MARK: - UITableViewDataSource
@@ -79,13 +38,13 @@ final class SettingsVC: UIViewController {
 extension SettingsVC: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.settingsStrings.count
+        viewModel.settingsCellItems.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "CellForSettings") as? SettingsCell
         else { return UITableViewCell() }
-        let model = viewModel.settingsStrings[indexPath.row]
+        let model = viewModel.settingsCellItems[indexPath.row]
         cell.updateStrings(model: model, viewController: self)
         return cell
     }
@@ -98,5 +57,49 @@ extension SettingsVC: SettingsVCProtocol {
         viewModel.saveNewSettings(segmentIndex: segmentIndex, dimension: dimension)
         guard let delegate = delegate else { return }
         delegate.reload()
+    }
+}
+
+// MARK: - SETUP UI
+private extension SettingsVC {
+     func setScreen() {
+        view.backgroundColor = .clear
+        view.addSubview(tableView)
+        setNavigationItems()
+        createTableView()
+        registerCell()
+    }
+
+     func setNavigationItems() {
+        title = "Settings"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
+                                                            style: .done,
+                                                            target: self,
+                                                            action: #selector(closeButtonAction))
+        let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = textAttributes
+        navigationItem.rightBarButtonItem?.setTitleTextAttributes(textAttributes, for: .normal)
+        navigationItem.rightBarButtonItem?.setTitleTextAttributes(textAttributes, for: .highlighted)
+    }
+
+    @objc  func closeButtonAction() {
+        self.dismiss(animated: true)
+    }
+
+     func createTableView() {
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
+        tableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
+        tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
+        tableView.allowsSelection = false
+        tableView.dataSource = self
+        tableView.backgroundColor = .black
+        tableView.separatorColor = .clear
+        tableView.isScrollEnabled = false
+    }
+
+     func registerCell() {
+        tableView.register(SettingsCell.self, forCellReuseIdentifier: "CellForSettings")
     }
 }
