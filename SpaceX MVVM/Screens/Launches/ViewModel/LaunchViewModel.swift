@@ -7,12 +7,12 @@
 
 import Foundation
 
-protocol LaunchVCViewModelProtocol: AnyObject {
+protocol LaunchViewModelProtocol: AnyObject {
     var launchStrings: [LaunchCellItem] { get }
     var viewController: LaunchVCProtocol? { get set }
 }
 
-final class LaunchVCViewModel: LaunchVCViewModelProtocol {
+final class LaunchViewModel: LaunchViewModelProtocol {
 
     private let dataProvider = LaunchDataProvider()
     weak var viewController: LaunchVCProtocol?
@@ -26,8 +26,8 @@ final class LaunchVCViewModel: LaunchVCViewModelProtocol {
     let rocketName: String
     var launchStrings = [LaunchCellItem]()
 
-    init(rocketName: String) {
-        self.rocketName = rocketName
+    init(rocketId: String) {
+        self.rocketName = rocketId
         dataProvider.fetchLaunches { [weak self] launches in
             guard let self = self else { return }
             self.launches = launches.filter({ $0.rocket == self.rocketName })

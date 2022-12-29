@@ -108,6 +108,6 @@ extension MainPageVC: MainPageVCProtocol {
     }
 
     func reloadAllVC() {
-        rocketViewControllers.forEach({$0.reload()})
+        rocketViewControllers.forEach({$0.reloadItems()})
     }
 }

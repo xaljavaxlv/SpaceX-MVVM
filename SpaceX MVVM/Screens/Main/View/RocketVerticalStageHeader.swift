@@ -22,19 +22,8 @@ class RocketVerticalStageHeader: UICollectionReusableView {
     }
 
     func setHeader() {
-//        title.translatesAutoresizingMaskIntoConstraints = false
-//        title.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 0).isActive = true
-//        title.rightAnchor.constraint(equalTo: scrollView.rightAnchor, constant: 0).isActive = true
-//        title.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: height).isActive = true
-//        title.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0).isActive = true
-
-        //imgView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        //imgView.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        //imgView.heightAnchor.constraint(equalToConstant: 30).isActive = true
         title.text = "Stage N"
         title.textColor = .white
 
     }
 }
-
-// NSCollectionLayoutBoundarySupplementaryItem

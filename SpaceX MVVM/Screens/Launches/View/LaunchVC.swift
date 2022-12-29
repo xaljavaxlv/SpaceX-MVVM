@@ -14,10 +14,10 @@ protocol LaunchVCProtocol: AnyObject {
 final class LaunchVC: UIViewController {
 
     private let tableView = UITableView()
-    private var viewModel: LaunchVCViewModelProtocol!
+    private var viewModel: LaunchViewModelProtocol!
     private let spinner = UIActivityIndicatorView(style: .large)
 
-    init(viewModel: LaunchVCViewModelProtocol) {
+    init(viewModel: LaunchViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         self.viewModel.viewController = self

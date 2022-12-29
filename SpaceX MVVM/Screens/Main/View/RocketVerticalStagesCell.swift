@@ -26,8 +26,8 @@ final class RocketVerticalStagesCell: UICollectionViewCell {
     }
 
     func setCell(model: RocketCellItem) {
-        leftLabel.text = model.title ?? "n/a"
-        valueLabel.text = model.value ?? "n/a"
+        leftLabel.text = model.title
+        valueLabel.text = model.value
         measureLabel.text = model.measure ?? "n/a"
     }
 

@@ -56,7 +56,7 @@ extension SettingsVC: SettingsVCProtocol {
     func updateSavedSettings(segmentIndex: Int, dimension: DimensionsKeys) {
         viewModel.saveNewSettings(segmentIndex: segmentIndex, dimension: dimension)
         guard let delegate = delegate else { return }
-        delegate.reload()
+        delegate.reloadItems()
     }
 }
 

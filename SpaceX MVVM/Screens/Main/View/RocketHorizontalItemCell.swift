@@ -14,22 +14,18 @@ final class RocketHorizontalItemCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setCell()
+        setView()
+        createTopLabel()
+        createBottomLabel()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func updateLabelsText(model: RocketCellItem) {
-        topLabel.text = model.value ?? "n/a"
-        bottomLabel.text = model.title ?? "n/a"
-    }
-
-    private func setCell() {
-        setView()
-        createTopLabel()
-        createBottomLabel()
+    func setCell(model: RocketCellItem) {
+        topLabel.text = model.value 
+        bottomLabel.text = model.title 
     }
 
     private func setView() {

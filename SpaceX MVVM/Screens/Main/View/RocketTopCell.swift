@@ -13,7 +13,7 @@ final class RocketTopCell: UICollectionViewCell {
     private let bottomView = UIView()
     public let titleLabel = UILabel()
     private let settingsButton = UIButton()
-    weak public var delegate: RocketVCProtocol! // добавить в инит и поставить приват
+    weak var delegate: RocketVCProtocol! 
 
     override init(frame: CGRect) {
         super.init(frame: frame)
