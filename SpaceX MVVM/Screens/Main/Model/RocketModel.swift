@@ -19,32 +19,36 @@ struct RocketModel: Decodable {
     let id: String
 }
 
-// MARK: - Diameter
-struct Length: Codable {
-    let meters, feet: Double?
-}
+extension RocketModel {
+    // MARK: - Diameter
+    struct Length: Codable {
+        let meters, feet: Double?
+    }
 
-// MARK: - FirstStage
-struct FirstStage: Decodable {
-    let engines: Int
-    let fuelAmountTons: Double
-    let burnTimeSec: Int?
-}
+    // MARK: - FirstStage
+    struct FirstStage: Decodable {
+        let engines: Int
+        let fuelAmountTons: Double
+        let burnTimeSec: Int?
+    }
 
-// MARK: - Mass
-struct Mass: Decodable {
-    let kg, lb: Int
-}
+    // MARK: - Mass
+    struct Mass: Decodable {
+        // swiftlint:disable:next identifier_name
+        let kg, lb: Int
+    }
 
-// MARK: - PayloadWeight
-struct PayloadWeight: Codable {
-    let id, name: String
-    let kg, lb: Int
-}
+    // MARK: - PayloadWeight
+    struct PayloadWeight: Codable {
+        let id, name: String
+        // swiftlint:disable:next identifier_name
+        let kg, lb: Int
+    }
 
-// MARK: - SecondStage
-struct SecondStage: Codable {
-    let engines: Int
-    let fuelAmountTons: Double
-    let burnTimeSec: Int?
+    // MARK: - SecondStage
+    struct SecondStage: Codable {
+        let engines: Int
+        let fuelAmountTons: Double
+        let burnTimeSec: Int?
+    }
 }

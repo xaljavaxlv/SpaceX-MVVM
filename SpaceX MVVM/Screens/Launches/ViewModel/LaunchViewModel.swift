@@ -8,7 +8,7 @@
 import Foundation
 
 protocol LaunchViewModelProtocol: AnyObject {
-    var launchStrings: [LaunchCellItem] { get }
+    var launchCellItem: [LaunchCellItem] { get }
     var viewController: LaunchVCProtocol? { get set }
 }
 
@@ -16,21 +16,21 @@ final class LaunchViewModel: LaunchViewModelProtocol {
 
     private let dataProvider = LaunchDataProvider()
     weak var viewController: LaunchVCProtocol?
-    var launches: [LaunchModel]? {
+    private var launches: [LaunchModel]? {
         didSet {
             prepareStrings()
             guard let viewController = viewController else { return }
             viewController.reload()
         }
     }
-    let rocketName: String
-    var launchStrings = [LaunchCellItem]()
+    let rocketId: String
+    var launchCellItem = [LaunchCellItem]()
 
     init(rocketId: String) {
-        self.rocketName = rocketId
+        self.rocketId = rocketId
         dataProvider.fetchLaunches { [weak self] launches in
             guard let self = self else { return }
-            self.launches = launches.filter({ $0.rocket == self.rocketName })
+            self.launches = launches.filter({ $0.rocket == self.rocketId })
         }
     }
 
@@ -49,7 +49,7 @@ final class LaunchViewModel: LaunchViewModelProtocol {
             default: imageName = .unknown
             }
             let launchString = LaunchCellItem(name: launch.name, date: date, imageName: imageName)
-            launchStrings.append(launchString)
+            launchCellItem.append(launchString)
         }
     }
 }

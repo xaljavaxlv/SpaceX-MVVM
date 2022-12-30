@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class RocketVerticalGeneralCell: UICollectionViewCell {
+final class RocketVerticalCell: UICollectionViewCell {
 
     private let leftLabel = UILabel()
     private let valueLabel = UILabel()

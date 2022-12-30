@@ -15,7 +15,7 @@ final class RocketDataProvider {
     private let logger = Logger()
 
     func fetchRockets(completion: @escaping ([RocketModel]) -> Void) {
-        networkLayer.loadData(url: url, modelType: [RocketModel].self) { result in
+        networkLayer.loadData(url: url) { (result: Result<[RocketModel], Error>) in
             switch result {
             case .success(let rockets):
                 DispatchQueue.main.async {

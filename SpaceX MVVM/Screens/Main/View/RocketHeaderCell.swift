@@ -7,13 +7,13 @@
 
 import UIKit
 
-final class RocketTopCell: UICollectionViewCell {
+final class RocketHeaderCell: UICollectionViewCell {
 
     private let imageView = UIImageView()
     private let bottomView = UIView()
-    public let titleLabel = UILabel()
+    let titleLabel = UILabel()
     private let settingsButton = UIButton()
-    weak var delegate: RocketVCProtocol! 
+    weak var delegate: RocketVCProtocol!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,7 +24,7 @@ final class RocketTopCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public func setCell(title: String, delegate: RocketVCProtocol) {
+    func setCell(title: String, delegate: RocketVCProtocol) {
         titleLabel.text = title
         self.delegate = delegate
     }
@@ -91,7 +91,8 @@ final class RocketTopCell: UICollectionViewCell {
 
     @objc private func settingsButtonAction() {
         guard let delegate = delegate else { return }
-        let settingsVC = SettingsVC(viewModel: SettingsViewModel(), delegate: delegate)
+        let settingsVC = SettingsVC(viewModel: SettingsViewModel())
+        settingsVC.delegate = delegate
         let settingsNavContr = UINavigationController(rootViewController: settingsVC)
         delegate.navigationController?.present(settingsNavContr, animated: true)
     }

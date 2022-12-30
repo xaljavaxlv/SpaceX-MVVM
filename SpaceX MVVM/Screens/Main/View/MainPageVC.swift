@@ -74,23 +74,21 @@ extension MainPageVC: UIPageViewControllerDataSource {
         guard let  index = rocketViewControllers.firstIndex(of: viewController) else { return UIViewController() }
         if index > 0 {
             return rocketViewControllers[index - 1]
-        }
-        return UIViewController()
+        } else { return nil }
     }
 
     func pageViewController(_ pageViewController: UIPageViewController,
                             viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let viewController = viewController as? RocketVC else { return nil }
         guard let  index = rocketViewControllers.firstIndex(of: viewController) else { return UIViewController() }
-        guard let rockets = rockets else { return nil}
+        guard let rockets = rockets else { return nil }
         if index < rockets.count - 1 {
             return rocketViewControllers[index + 1]
-        }
-        return UIViewController()
+        } else { return nil }
     }
 
     func presentationCount(for pageViewController: UIPageViewController) -> Int {
-        guard let rockets = rockets else { return 0}
+        guard let rockets = rockets else { return 0 }
         return rockets.count
     }
 

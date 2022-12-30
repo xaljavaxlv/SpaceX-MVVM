@@ -16,19 +16,18 @@ final class NetworkLayer {
     }()
 
     func loadData<T: Decodable>(url from: String,
-                                modelType: T.Type,
                                 completion: @escaping (Result<T, Error>) -> Void) {
         guard let url = URL(string: from) else { return }
-        let task = URLSession.shared.dataTask(with: url) { data, _, error in
+        return URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data = data else { return }
 
             do {
-                let json = try self.decoder.decode(modelType, from: data)
+                let json = try self.decoder.decode(T.self, from: data)
                 completion(.success(json))
             } catch {
                 completion(.failure(error))
             }
         }
-        task.resume()
+        .resume()
     }
 }

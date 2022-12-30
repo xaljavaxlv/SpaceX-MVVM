@@ -11,7 +11,10 @@ struct RocketCellItem: Hashable {
     let id = UUID()
     let title: String
     let value: String
-    let measure: String?
+}
+
+enum RocketSectionType: CaseIterable {
+    case header, horizontal, vertical, button
 }
 
 struct RocketSectionModel: Hashable {
@@ -28,9 +31,4 @@ enum RocketItemType: Hashable {
     case button
 }
 
-enum RocketSectionType: CaseIterable {
-    case header
-    case horizontal
-    case vertical
-    case button
-}
+

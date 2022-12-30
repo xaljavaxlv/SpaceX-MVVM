@@ -14,7 +14,7 @@ final class LaunchDataProvider {
     private let logger = Logger()
 
     func fetchLaunches(completion: @escaping ([LaunchModel]) -> Void) {
-        networkLayer.loadData(url: url, modelType: [LaunchModel].self) { [weak self] result in
+        networkLayer.loadData(url: url) { [weak self] (result: Result<[LaunchModel], Error>) in
             guard let self = self else { return }
             switch result {
             case .success(let launches):

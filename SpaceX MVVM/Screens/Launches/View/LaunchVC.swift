@@ -14,7 +14,7 @@ protocol LaunchVCProtocol: AnyObject {
 final class LaunchVC: UIViewController {
 
     private let tableView = UITableView()
-    private var viewModel: LaunchViewModelProtocol!
+    private let viewModel: LaunchViewModelProtocol
     private let spinner = UIActivityIndicatorView(style: .large)
 
     init(viewModel: LaunchViewModelProtocol) {
@@ -40,13 +40,13 @@ final class LaunchVC: UIViewController {
 
 extension LaunchVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.launchStrings.count
+        viewModel.launchCellItem.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: "CellForLaunches") as? LaunchCell else { return UITableViewCell() }
-        let launchStrings = viewModel.launchStrings
+        let launchStrings = viewModel.launchCellItem
         cell.updateContent(model: launchStrings[indexPath.row])
         return cell
     }

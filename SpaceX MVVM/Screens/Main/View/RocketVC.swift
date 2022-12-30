@@ -17,7 +17,7 @@ protocol RocketVCProtocol: AnyObject {
 final class RocketVC: UIViewController {
 
     private var collectionView: UICollectionView!
-    public weak var mainPageVC: MainPageVCProtocol?
+    weak var mainPageVC: MainPageVCProtocol?
     private var viewModel: RocketViewModelProtocol!
     typealias DataSource = UICollectionViewDiffableDataSource<RocketSectionModel, RocketItemType>
     typealias Snapshot = NSDiffableDataSourceSnapshot<RocketSectionModel, RocketItemType>
@@ -55,14 +55,13 @@ final class RocketVC: UIViewController {
     }
 
     private func registerCells() {
-        collectionView.register(RocketTopCell.self, forCellWithReuseIdentifier: "CellForTop")
-        collectionView.register(RocketHorizontalItemCell.self, forCellWithReuseIdentifier: "CellForHorizontalItem")
-        collectionView.register(RocketVerticalGeneralCell.self, forCellWithReuseIdentifier: "CellForVerticalItem")
-        collectionView.register(RocketVerticalStagesCell.self,
-                                     forCellWithReuseIdentifier: "RocketVerticalFirstStageCell")
-        collectionView.register(RocketLaunchButtonCell.self, forCellWithReuseIdentifier: "CellForButton")
-        collectionView.register(RocketVerticalStageHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "RocketVerticalStageHeader")
-
+        collectionView.register(RocketHeaderCell.self, forCellWithReuseIdentifier: "RocketHeaderCell")
+        collectionView.register(RocketHorizontalItemCell.self, forCellWithReuseIdentifier: "RocketHorizontalItemCell")
+        collectionView.register(RocketVerticalCell.self, forCellWithReuseIdentifier: "RocketVerticalCell")
+        collectionView.register(RocketLaunchButtonCell.self, forCellWithReuseIdentifier: "RocketLaunchButtonCell")
+        collectionView.register(RocketVerticalStageHeader.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: "RocketVerticalStageHeader")
     }
 }
 
@@ -70,7 +69,8 @@ final class RocketVC: UIViewController {
 extension RocketVC {
     func createDataSource() -> DataSource {
         let dataSource = DataSource( collectionView: collectionView,
-                                     cellProvider: { [weak self] (collectionView, indexPath, item) -> UICollectionViewCell? in
+                                     cellProvider: { [weak self] (_, indexPath, item)
+            -> UICollectionViewCell? in
             guard let self = self else { return nil }
             switch item {
             case .header(title: let title, image: let image):
@@ -101,14 +101,15 @@ extension RocketVC {
 
     private func createCellForHeader(indexPath: IndexPath, title: String, imageUrl: URL) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "CellForTop", for: indexPath) as? RocketTopCell else { return UICollectionViewCell() }
+            withReuseIdentifier: "RocketHeaderCell",
+            for: indexPath) as? RocketHeaderCell else { return UICollectionViewCell() }
     cell.setCell(title: title, delegate: self)
         return cell
     }
 
     private func createCellForHorizontalItems(indexPath: IndexPath, cellItem: RocketCellItem) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "CellForHorizontalItem",
+            withReuseIdentifier: "RocketHorizontalItemCell",
             for: indexPath) as? RocketHorizontalItemCell else { return UICollectionViewCell() }
         cell.setCell(model: cellItem)
         return cell
@@ -116,30 +117,16 @@ extension RocketVC {
 
     private func createCellForVerticalGeneralItems(indexPath: IndexPath,
                                                    cellItem: RocketCellItem) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellForVerticalItem",
-                                                            for: indexPath) as? RocketVerticalGeneralCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RocketVerticalCell",
+                                                            for: indexPath) as? RocketVerticalCell
         else { return UICollectionViewCell() }
         cell.setCell(model: cellItem)
         return cell
     }
 
-    private func createCellForVerticalFirstSectionItems(indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "RocketVerticalFirstStageCell",
-            for: indexPath) as? RocketVerticalStagesCell else { return UICollectionViewCell() }
-        return cell
-    }
-
-    private func createCellForVerticalSecondSectionItems(indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "RocketVerticalFirstStageCell",
-            for: indexPath) as? RocketVerticalStagesCell else { return UICollectionViewCell() }
-        return cell
-    }
-
     private func createCellForButton(indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "CellForButton",
+            withReuseIdentifier: "RocketLaunchButtonCell",
             for: indexPath) as? RocketLaunchButtonCell else { return UICollectionViewCell() }
         cell.button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         return cell

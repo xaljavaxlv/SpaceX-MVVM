@@ -22,17 +22,9 @@ extension RocketViewModel: RocketViewModelProtocol {
 
 final class RocketViewModel {
     weak var viewController: RocketVCProtocol!
-
     var sections = [RocketSectionModel]()
-
     private let settings = UserSettings.shared
     private var rocket: RocketModel
-//    {
-//        didSet {
-//            setSections()
-//            viewController.reload()
-//        }
-//    }
     var currentRocket: (rocketId: String, rocketName: String)
 
     init(rocket: RocketModel) {
@@ -74,7 +66,7 @@ final class RocketViewModel {
             let measure = settings.getDimensionValue(for: dimension)
             let value = getValueForHorizontalItem(dimension: dimension, measure: measure)
             let title =  "\(dimension.rawValue.capitalized), \(measure)"
-            let cellItem = RocketCellItem(title: title, value: value, measure: measure)
+            let cellItem = RocketCellItem(title: title, value: value)
             let sectionItem = RocketItemType.horizontal(cellItem: cellItem)
             items.append(sectionItem)
         }
@@ -117,7 +109,7 @@ final class RocketViewModel {
         for cell in VerticalCells.General.allCases {
             let title = cell.title
             let value = getValueForVerticalGeneralItem(cell: cell)
-            let cellItem = RocketCellItem(title: title, value: value, measure: nil)
+            let cellItem = RocketCellItem(title: title, value: value)
             let sectionItem = RocketItemType.vertical(cellItem: cellItem)
             items.append(sectionItem)
         }
@@ -138,8 +130,7 @@ final class RocketViewModel {
         for cell in VerticalCells.FirstStage.allCases {
             let title = cell.title
             let value = getValueForVerticalFirstStageItem(cell: cell)
-            let measure = cell.measure
-            let cellItem = RocketCellItem(title: title, value: value, measure: measure)
+            let cellItem = RocketCellItem(title: title, value: value)
             let sectionItem = RocketItemType.vertical(cellItem: cellItem)
             items.append(sectionItem)
         }
@@ -149,11 +140,11 @@ final class RocketViewModel {
     private func getValueForVerticalFirstStageItem(cell: VerticalCells.FirstStage) -> String {
         switch cell {
         case .engines: return String(rocket.firstStage.engines)
-        case .fuelData: return String(rocket.firstStage.fuelAmountTons)
+        case .fuelData: return String(rocket.firstStage.fuelAmountTons) + " ton"
         case .burnData:
             var value = "n/a"
             if rocket.firstStage.burnTimeSec != nil {
-                value = "\(String(describing: rocket.firstStage.burnTimeSec!))"
+                value = "\(String(describing: rocket.firstStage.burnTimeSec!)) sec"
             }
             return value
         }
@@ -165,8 +156,7 @@ final class RocketViewModel {
         for cell in VerticalCells.SecondStage.allCases {
             let title = cell.title
             let value = getValueForVerticalSecondStageItem(cell: cell)
-            let measure = cell.measure
-            let cellItem = RocketCellItem(title: title, value: value, measure: measure)
+            let cellItem = RocketCellItem(title: title, value: value)
             let sectionItem = RocketItemType.vertical(cellItem: cellItem)
             items.append(sectionItem)
         }
@@ -176,78 +166,80 @@ final class RocketViewModel {
     private func getValueForVerticalSecondStageItem(cell: VerticalCells.SecondStage) -> String {
         switch cell {
         case .engines: return String(rocket.secondStage.engines)
-        case .fuelData: return String(rocket.secondStage.fuelAmountTons)
+        case .fuelData: return String(rocket.secondStage.fuelAmountTons) + " ton"
         case .burnData:
             var value = "n/a"
             if rocket.secondStage.burnTimeSec != nil {
-                value = "\(String(describing: rocket.secondStage.burnTimeSec!))"
+                value = "\(String(describing: rocket.secondStage.burnTimeSec!)) sec"
             }
             return value
         }
     }
 }
 
-    extension RocketViewModel {
+extension RocketViewModel {
 
-        private enum VerticalCells {
+    private enum VerticalCells {
+        // swiftlint:disable:next nesting
+        enum General: CaseIterable {
+            case firsLaunch
+            case country
+            case launchCost
 
-            enum General: CaseIterable {
-                case firsLaunch
-                case country
-                case launchCost
+            var title: String {
+                switch self {
+                case .firsLaunch: return "First Flight"
+                case .country: return "Country"
+                case .launchCost: return "Cost per launch"
+                }
+            }
+        }
 
-                var title: String {
-                    switch self {
-                    case .firsLaunch: return "First Flight"
-                    case .country: return "Country"
-                    case .launchCost: return "Cost per launch"
-                    }
+        // swiftlint:disable:next nesting
+        enum FirstStage: CaseIterable {
+            case engines
+            case fuelData
+            case burnData
+
+            var title: String {
+                switch self {
+                case .engines: return "Engines"
+                case .fuelData: return "Fuel Amount"
+                case .burnData: return "Burn time"
                 }
             }
 
-            enum FirstStage: CaseIterable {
-                case engines
-                case fuelData
-                case burnData
-
-                var title: String {
-                    switch self {
-                    case .engines: return "Engines"
-                    case .fuelData: return "Fuel Amount"
-                    case .burnData: return "Burn time"
-                    }
+            var measure: String {
+                switch self {
+                case .fuelData: return "ton"
+                case .burnData: return "sec"
+                default: return ""
                 }
+            }
+        }
 
-                var measure: String {
-                    switch self {
-                    case .fuelData: return "ton"
-                    case .burnData: return "sec"
-                    default: return ""
-                    }
+        // swiftlint:disable:next nesting
+        enum SecondStage: CaseIterable {
+
+            case engines
+            case fuelData
+            case burnData
+
+            var title: String {
+                switch self {
+                case .engines: return "Engines"
+                case .fuelData: return "Fuel Amount"
+                case .burnData: return "Burn time"
                 }
             }
 
-            enum SecondStage: CaseIterable {
-
-                case engines
-                case fuelData
-                case burnData
-
-                var title: String {
-                    switch self {
-                    case .engines: return "Engines"
-                    case .fuelData: return "Fuel Amount"
-                    case .burnData: return "Burn time"
-                    }
-                }
-
-                var measure: String {
-                    switch self {
-                    case .fuelData: return "ton"
-                    case .burnData: return "sec"
-                    default: return ""
-                    }
+            var measure: String {
+                switch self {
+                case .fuelData: return "ton"
+                case .burnData: return "sec"
+                default: return ""
                 }
             }
         }
     }
+}

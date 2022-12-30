@@ -26,6 +26,12 @@ class LaunchCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func updateContent(model: LaunchCellItem) {
+        topLabel.text = model.name
+        bottomLabel.text = model.date
+        imgView.image = UIImage(named: model.imageName.rawValue)
+    }
+
     private func setView() {
         contentView.backgroundColor = .black
         contentView.addSubview(view)
@@ -64,11 +70,5 @@ class LaunchCell: UITableViewCell {
         bottomLabel.rightAnchor.constraint(equalTo: imgView.leftAnchor, constant: 10).isActive = true
         bottomLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30).isActive = true
         bottomLabel.textColor = .white
-    }
-
-    public func updateContent(model: LaunchCellItem) {
-        topLabel.text = model.name
-        bottomLabel.text = model.date
-        imgView.image = UIImage(named: model.imageName.rawValue)
     }
 }

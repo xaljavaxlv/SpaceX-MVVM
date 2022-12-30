@@ -14,7 +14,6 @@ class RocketVerticalStageHeader: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setHeader()
-        print("SDSD")
     }
 
     required init?(coder: NSCoder) {

@@ -10,7 +10,7 @@ import UIKit
 final class SettingsCell: UITableViewCell {
 
     private weak var viewController: SettingsVCProtocol?
-    private let segmentControl = UISegmentedControl(items: ["", ""])
+    private let segmentControl = UISegmentedControl()
     private let leftLabel = UILabel()
     private var dimension: DimensionsKeys?
 
@@ -30,8 +30,8 @@ final class SettingsCell: UITableViewCell {
     func updateStrings(model: SettingsCellItem, viewController: SettingsVCProtocol) {
         self.viewController = viewController
         leftLabel.text = model.dimension.rawValue.capitalized
-        segmentControl.setTitle(model.segmentLeftTitle, forSegmentAt: 0)
-        segmentControl.setTitle(model.segmentRightLabel, forSegmentAt: 1)
+        segmentControl.insertSegment(withTitle: model.segmentLeftTitle, at: 0, animated: true)
+        segmentControl.insertSegment(withTitle: model.segmentRightLabel, at: 1, animated: true)
         segmentControl.selectedSegmentIndex = model.segmentIndex
         dimension = model.dimension
     }

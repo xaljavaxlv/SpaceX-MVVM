@@ -13,13 +13,12 @@ protocol SettingsVCProtocol: AnyObject {
 
 final class SettingsVC: UIViewController {
 
-    private var tableView = UITableView()
-    private weak var delegate: RocketVCProtocol?
-    private var viewModel: SettingsViewModelProtocol!
+    private let tableView = UITableView()
+    weak var delegate: RocketVCProtocol?
+    private let viewModel: SettingsViewModelProtocol
 
-    init(viewModel: SettingsViewModelProtocol, delegate: RocketVCProtocol) {
+    init(viewModel: SettingsViewModelProtocol) {
         self.viewModel = viewModel
-        self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -55,8 +54,7 @@ extension SettingsVC: UITableViewDataSource {
 extension SettingsVC: SettingsVCProtocol {
     func updateSavedSettings(segmentIndex: Int, dimension: DimensionsKeys) {
         viewModel.saveNewSettings(segmentIndex: segmentIndex, dimension: dimension)
-        guard let delegate = delegate else { return }
-        delegate.reloadItems()
+        delegate?.reloadItems()
     }
 }
 

@@ -24,8 +24,8 @@ final class RocketHorizontalItemCell: UICollectionViewCell {
     }
 
     func setCell(model: RocketCellItem) {
-        topLabel.text = model.value 
-        bottomLabel.text = model.title 
+        topLabel.text = model.value
+        bottomLabel.text = model.title
     }
 
     private func setView() {
