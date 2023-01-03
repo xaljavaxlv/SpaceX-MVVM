@@ -29,15 +29,16 @@ class LaunchCell: UITableViewCell {
     func updateContent(model: LaunchCellItem) {
         topLabel.text = model.name
         bottomLabel.text = model.date
-        imgView.image = UIImage(named: model.imageName.rawValue)
+        imgView.image = model.imageName.image
     }
 
     private func setView() {
         contentView.backgroundColor = .black
         contentView.addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: globalMargins).isActive = true
-        view.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -globalMargins).isActive = true
+        view.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: Constants.globalMargins).isActive = true
+        view.rightAnchor.constraint(equalTo: contentView.rightAnchor,
+                                    constant: -Constants.globalMargins).isActive = true
         view.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
         view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
         view.backgroundColor = #colorLiteral(red: 0.1494633555, green: 0.1494633555, blue: 0.1494633555, alpha: 1)
@@ -47,7 +48,7 @@ class LaunchCell: UITableViewCell {
     private func setImageView() {
         view.addSubview(imgView)
         imgView.translatesAutoresizingMaskIntoConstraints = false
-        imgView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -globalMargins).isActive = true
+        imgView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -Constants.globalMargins).isActive = true
         imgView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         imgView.widthAnchor.constraint(equalToConstant: 30).isActive = true
         imgView.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -57,7 +58,7 @@ class LaunchCell: UITableViewCell {
         view.addSubview(topLabel)
         topLabel.translatesAutoresizingMaskIntoConstraints = false
         topLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 30).isActive = true
-        topLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: globalMargins).isActive = true
+        topLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: Constants.globalMargins).isActive = true
         topLabel.rightAnchor.constraint(equalTo: imgView.leftAnchor, constant: 10).isActive = true
         topLabel.textColor = .white
     }
@@ -66,7 +67,7 @@ class LaunchCell: UITableViewCell {
         view.addSubview(bottomLabel)
         bottomLabel.translatesAutoresizingMaskIntoConstraints = false
         bottomLabel.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 10).isActive = true
-        bottomLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: globalMargins).isActive = true
+        bottomLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: Constants.globalMargins).isActive = true
         bottomLabel.rightAnchor.constraint(equalTo: imgView.leftAnchor, constant: 10).isActive = true
         bottomLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30).isActive = true
         bottomLabel.textColor = .white

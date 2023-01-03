@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9589458A2964161D0007E123 /* Cells+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958945892964161D0007E123 /* Cells+Extensions.swift */; };
 		95B917AF293EBC870021B05A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B917AE293EBC870021B05A /* AppDelegate.swift */; };
 		95B917B1293EBC870021B05A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B917B0293EBC870021B05A /* SceneDelegate.swift */; };
 		95B917B3293EBC870021B05A /* RocketVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B917B2293EBC870021B05A /* RocketVC.swift */; };
@@ -41,6 +42,7 @@
 
 /* Begin PBXFileReference section */
 		2EF361C9B8BBDC93FF6C99E2 /* Pods-SpaceX MVVM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpaceX MVVM.release.xcconfig"; path = "Target Support Files/Pods-SpaceX MVVM/Pods-SpaceX MVVM.release.xcconfig"; sourceTree = "<group>"; };
+		958945892964161D0007E123 /* Cells+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cells+Extensions.swift"; sourceTree = "<group>"; };
 		95B917AB293EBC870021B05A /* SpaceX MVVM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SpaceX MVVM.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		95B917AE293EBC870021B05A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		95B917B0293EBC870021B05A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 				95B917B9293EBC880021B05A /* LaunchScreen.storyboard */,
 				95B917AE293EBC870021B05A /* AppDelegate.swift */,
 				95B917B0293EBC870021B05A /* SceneDelegate.swift */,
+				958945892964161D0007E123 /* Cells+Extensions.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -413,6 +416,7 @@
 				95B91805294E83B70021B05A /* SettingsCellItem.swift in Sources */,
 				95B917C7294026CB0021B05A /* RocketHorizontalItemCell.swift in Sources */,
 				95B917D729405A230021B05A /* RocketModel.swift in Sources */,
+				9589458A2964161D0007E123 /* Cells+Extensions.swift in Sources */,
 				95B917EC294289DB0021B05A /* RocketCellItem.swift in Sources */,
 				95B917EA294161D50021B05A /* SettingsCell.swift in Sources */,
 				95B917F82946EB6D0021B05A /* LaunchVC.swift in Sources */,

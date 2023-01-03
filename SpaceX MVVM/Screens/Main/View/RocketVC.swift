@@ -55,10 +55,13 @@ final class RocketVC: UIViewController {
     }
 
     private func registerCells() {
-        collectionView.register(RocketHeaderCell.self, forCellWithReuseIdentifier: "RocketHeaderCell")
-        collectionView.register(RocketHorizontalItemCell.self, forCellWithReuseIdentifier: "RocketHorizontalItemCell")
-        collectionView.register(RocketVerticalCell.self, forCellWithReuseIdentifier: "RocketVerticalCell")
-        collectionView.register(RocketLaunchButtonCell.self, forCellWithReuseIdentifier: "RocketLaunchButtonCell")
+        collectionView.register(RocketHeaderCell.self, forCellWithReuseIdentifier: RocketHeaderCell.identifier)
+        collectionView.register(RocketHorizontalItemCell.self,
+                                forCellWithReuseIdentifier: RocketHorizontalItemCell.identifier)
+        collectionView.register(RocketVerticalCell.self,
+                                forCellWithReuseIdentifier: RocketVerticalCell.identifier)
+        collectionView.register(RocketLaunchButtonCell.self,
+                                forCellWithReuseIdentifier: RocketLaunchButtonCell.identifier)
         collectionView.register(RocketVerticalStageHeader.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: "RocketVerticalStageHeader")
@@ -101,7 +104,7 @@ extension RocketVC {
 
     private func createCellForHeader(indexPath: IndexPath, title: String, imageUrl: URL) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "RocketHeaderCell",
+            withReuseIdentifier: RocketHeaderCell.identifier,
             for: indexPath) as? RocketHeaderCell else { return UICollectionViewCell() }
     cell.setCell(title: title, delegate: self)
         return cell
@@ -109,7 +112,7 @@ extension RocketVC {
 
     private func createCellForHorizontalItems(indexPath: IndexPath, cellItem: RocketCellItem) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "RocketHorizontalItemCell",
+            withReuseIdentifier: RocketHorizontalItemCell.identifier,
             for: indexPath) as? RocketHorizontalItemCell else { return UICollectionViewCell() }
         cell.setCell(model: cellItem)
         return cell
@@ -117,7 +120,7 @@ extension RocketVC {
 
     private func createCellForVerticalGeneralItems(indexPath: IndexPath,
                                                    cellItem: RocketCellItem) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RocketVerticalCell",
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RocketVerticalCell.identifier,
                                                             for: indexPath) as? RocketVerticalCell
         else { return UICollectionViewCell() }
         cell.setCell(model: cellItem)
@@ -126,7 +129,7 @@ extension RocketVC {
 
     private func createCellForButton(indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "RocketLaunchButtonCell",
+            withReuseIdentifier: RocketLaunchButtonCell.identifier,
             for: indexPath) as? RocketLaunchButtonCell else { return UICollectionViewCell() }
         cell.button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         return cell
@@ -236,7 +239,7 @@ extension RocketVC {
 
     private func createButtonSection() -> NSCollectionLayoutSection {
         let height: CGFloat = 50
-        let width: CGFloat = UIScreen.main.bounds.width - globalMargins * 2
+        let width: CGFloat = UIScreen.main.bounds.width - Constants.globalMargins * 2
         let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1),
                                                             heightDimension: .absolute(50)))
         let group = NSCollectionLayoutGroup.vertical(layoutSize:
@@ -244,7 +247,7 @@ extension RocketVC {
                       heightDimension: .absolute(height)),
                                                      subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = .init(top: 20, leading: globalMargins, bottom: 20, trailing: 0)
+        section.contentInsets = .init(top: 20, leading: Constants.globalMargins, bottom: 20, trailing: 0)
         return section
     }
 }

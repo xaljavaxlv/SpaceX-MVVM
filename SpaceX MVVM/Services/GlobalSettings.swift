@@ -7,4 +7,6 @@
 
 import UIKit
 
-let globalMargins: CGFloat = 20
+enum Constants {
+    static let globalMargins: CGFloat = 20
+}

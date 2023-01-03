@@ -30,5 +30,3 @@ enum RocketItemType: Hashable {
     case vertical(cellItem: RocketCellItem)
     case button
 }
-
-

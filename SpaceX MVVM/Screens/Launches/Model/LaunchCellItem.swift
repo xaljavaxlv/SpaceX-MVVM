@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct LaunchCellItem {
 
@@ -15,5 +16,9 @@ struct LaunchCellItem {
 
     enum Image: String {
         case rocketdown, rocketup, unknown
+
+        var image: UIImage? {
+            UIImage(named: rawValue)
+        }
     }
 }

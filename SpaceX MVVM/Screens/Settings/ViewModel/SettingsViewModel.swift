@@ -22,17 +22,19 @@ final class SettingsViewModel: SettingsViewModelProtocol {
 
     private func createSettingsStrings() {
         let settings = UserSettings.shared
-        for dimension in DimensionsKeys.allCases {
-            var segmentNames = [Lenghts.meters.rawValue, Lenghts.feets.rawValue]
+        settingsCellItems = DimensionsKeys.allCases.map { dimension in
+            let segmentNames: [String]
             if dimension == DimensionsKeys.mass || dimension == DimensionsKeys.payload {
                 segmentNames = [Weights.kilogram.rawValue, Weights.pound.rawValue]
+            } else {
+                segmentNames = [Lenghts.meters.rawValue, Lenghts.feets.rawValue]
             }
             let segmentIndex = segmentNames.firstIndex(of: settings.getDimensionValue(for: dimension)) ?? 0
             let settingString = SettingsCellItem(dimension: dimension,
                                                  segmentLeftTitle: segmentNames[0],
                                                  segmentRightLabel: segmentNames[1],
                                                  segmentIndex: segmentIndex)
-            settingsCellItems.append(settingString)
+            return settingString
         }
     }
 

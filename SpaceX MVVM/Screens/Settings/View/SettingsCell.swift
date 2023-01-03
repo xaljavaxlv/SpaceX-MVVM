@@ -39,7 +39,8 @@ final class SettingsCell: UITableViewCell {
     private func createLeftLabel() {
         leftLabel.translatesAutoresizingMaskIntoConstraints = false
         segmentControl.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
-        leftLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: globalMargins).isActive = true
+        leftLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor,
+                                        constant: Constants.globalMargins).isActive = true
         leftLabel.rightAnchor.constraint(equalTo: segmentControl.leftAnchor, constant: -10).isActive = true
         leftLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         leftLabel.textColor = .white
@@ -50,7 +51,7 @@ final class SettingsCell: UITableViewCell {
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
         segmentControl.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
         segmentControl.rightAnchor.constraint(equalTo: contentView.rightAnchor,
-                                              constant: -globalMargins).isActive = true
+                                              constant: -Constants.globalMargins).isActive = true
         segmentControl.widthAnchor.constraint(equalToConstant: 140).isActive = true
         segmentControl.heightAnchor.constraint(equalToConstant: 40).isActive = true
         segmentControl.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true

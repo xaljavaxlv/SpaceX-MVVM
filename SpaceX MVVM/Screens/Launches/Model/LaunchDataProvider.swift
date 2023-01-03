@@ -18,9 +18,7 @@ final class LaunchDataProvider {
             guard let self = self else { return }
             switch result {
             case .success(let launches):
-                DispatchQueue.main.async {
                     completion(launches)
-                }
             case .failure(let error):
                 self.logger.log("fetchLaunches have not gotten data with error \(error.localizedDescription)")
             }

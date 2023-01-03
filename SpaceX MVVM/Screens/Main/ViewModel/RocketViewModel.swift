@@ -54,23 +54,21 @@ final class RocketViewModel {
     }
 
     // MARK: - Header
-// TODO: - допилить картинки
     private func getHeaderItem() -> [RocketItemType] {
-        [RocketItemType.header(title: rocket.name, image: URL(string: "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_dark_1x_r5.png")!)] // заглушка
+        [RocketItemType.header(title: rocket.name, image: URL(
+            string: "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_dark_1x_r5.png")!)] // fix later
     }
 
     // MARK: - Horizontal items
     private func getHorizontalItems() -> [RocketItemType] {
-        var items = [RocketItemType]()
-        for dimension in DimensionsKeys.allCases {
+        DimensionsKeys.allCases.map { dimension in
             let measure = settings.getDimensionValue(for: dimension)
             let value = getValueForHorizontalItem(dimension: dimension, measure: measure)
             let title =  "\(dimension.rawValue.capitalized), \(measure)"
             let cellItem = RocketCellItem(title: title, value: value)
             let sectionItem = RocketItemType.horizontal(cellItem: cellItem)
-            items.append(sectionItem)
+            return sectionItem
         }
-        return items
     }
 
     private func getValueForHorizontalItem(dimension: DimensionsKeys, measure: String) -> String {
@@ -105,15 +103,13 @@ final class RocketViewModel {
 
     // MARK: - Vertical General items
     private func getVerticalGeneralItems() -> [RocketItemType] {
-        var items = [RocketItemType]()
-        for cell in VerticalCells.General.allCases {
+        VerticalCells.General.allCases.map { cell in
             let title = cell.title
             let value = getValueForVerticalGeneralItem(cell: cell)
             let cellItem = RocketCellItem(title: title, value: value)
             let sectionItem = RocketItemType.vertical(cellItem: cellItem)
-            items.append(sectionItem)
+            return sectionItem
         }
-        return items
     }
 
     private func getValueForVerticalGeneralItem(cell: VerticalCells.General) -> String {
@@ -126,15 +122,13 @@ final class RocketViewModel {
 
     // MARK: - Vertical Stage One items
     private func getVerticalFirstStageItems() -> [RocketItemType] {
-        var items = [RocketItemType]()
-        for cell in VerticalCells.FirstStage.allCases {
+        VerticalCells.FirstStage.allCases.map { cell in
             let title = cell.title
             let value = getValueForVerticalFirstStageItem(cell: cell)
             let cellItem = RocketCellItem(title: title, value: value)
             let sectionItem = RocketItemType.vertical(cellItem: cellItem)
-            items.append(sectionItem)
+            return sectionItem
         }
-        return items
     }
 
     private func getValueForVerticalFirstStageItem(cell: VerticalCells.FirstStage) -> String {
@@ -152,15 +146,13 @@ final class RocketViewModel {
 
     // MARK: - Vertical Stage Two items
     private func getVerticalSecondStageItems() -> [RocketItemType] {
-        var items = [RocketItemType]()
-        for cell in VerticalCells.SecondStage.allCases {
+        VerticalCells.SecondStage.allCases.map { cell in
             let title = cell.title
             let value = getValueForVerticalSecondStageItem(cell: cell)
             let cellItem = RocketCellItem(title: title, value: value)
             let sectionItem = RocketItemType.vertical(cellItem: cellItem)
-            items.append(sectionItem)
+             return sectionItem
         }
-        return items
     }
 
     private func getValueForVerticalSecondStageItem(cell: VerticalCells.SecondStage) -> String {

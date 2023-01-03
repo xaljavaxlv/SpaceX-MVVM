@@ -56,11 +56,11 @@ final class MainPageVC: UIPageViewController {
 
     private func createRocketVCList() {
         guard let rockets = rockets else { return }
-        for rocket in rockets {
+        rocketViewControllers = rockets.map { rocket in
             let rocketViewModel = RocketViewModel(rocket: rocket)
             let newRocketVC = RocketVC(viewModel: rocketViewModel)
             newRocketVC.mainPageVC = self
-            rocketViewControllers.append(newRocketVC)
+            return newRocketVC
         }
     }
 }

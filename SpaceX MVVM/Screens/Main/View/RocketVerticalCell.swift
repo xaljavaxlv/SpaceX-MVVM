@@ -36,7 +36,8 @@ final class RocketVerticalCell: UICollectionViewCell {
 
     private func setLeftLabel() {
         leftLabel.translatesAutoresizingMaskIntoConstraints = false
-        leftLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: globalMargins).isActive = true
+        leftLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor,
+                                        constant: Constants.globalMargins).isActive = true
         leftLabel.rightAnchor.constraint(equalTo: valueLabel.leftAnchor, constant: -10).isActive = true
         leftLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
         leftLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
@@ -47,7 +48,8 @@ final class RocketVerticalCell: UICollectionViewCell {
 
     private func setRightLabel() {
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
-        valueLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -globalMargins).isActive = true
+        valueLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor,
+                                          constant: -Constants.globalMargins).isActive = true
         valueLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
         valueLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
         valueLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)

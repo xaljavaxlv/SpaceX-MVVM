@@ -70,7 +70,8 @@ final class RocketHeaderCell: UICollectionViewCell {
 
     private func setTitleLabel() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.leftAnchor.constraint(equalTo: bottomView.leftAnchor, constant: globalMargins).isActive = true
+        titleLabel.leftAnchor.constraint(equalTo: bottomView.leftAnchor,
+                                         constant: Constants.globalMargins).isActive = true
         titleLabel.rightAnchor.constraint(equalTo: settingsButton.leftAnchor, constant: -10).isActive = true
         titleLabel.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 35).isActive = true
         titleLabel.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -10).isActive = true
@@ -82,7 +83,8 @@ final class RocketHeaderCell: UICollectionViewCell {
         let image = UIImage(named: "Setting")
         settingsButton.setBackgroundImage(image, for: .normal)
         settingsButton.translatesAutoresizingMaskIntoConstraints = false
-        settingsButton.rightAnchor.constraint(equalTo: bottomView.rightAnchor, constant: -globalMargins).isActive = true
+        settingsButton.rightAnchor.constraint(equalTo: bottomView.rightAnchor,
+                                              constant: -Constants.globalMargins).isActive = true
         settingsButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         settingsButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         settingsButton.heightAnchor.constraint(equalToConstant: 30).isActive = true

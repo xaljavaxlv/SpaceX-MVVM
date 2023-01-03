@@ -41,7 +41,7 @@ extension SettingsVC: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "CellForSettings") as? SettingsCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsCell.identifier) as? SettingsCell
         else { return UITableViewCell() }
         let model = viewModel.settingsCellItems[indexPath.row]
         cell.updateStrings(model: model, viewController: self)
@@ -98,6 +98,6 @@ private extension SettingsVC {
     }
 
      func registerCell() {
-        tableView.register(SettingsCell.self, forCellReuseIdentifier: "CellForSettings")
+        tableView.register(SettingsCell.self, forCellReuseIdentifier: SettingsCell.identifier)
     }
 }

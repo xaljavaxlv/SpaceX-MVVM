@@ -45,7 +45,7 @@ extension LaunchVC: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: "CellForLaunches") as? LaunchCell else { return UITableViewCell() }
+            withIdentifier: LaunchCell.identifier) as? LaunchCell else { return UITableViewCell() }
         let launchStrings = viewModel.launchCellItem
         cell.updateContent(model: launchStrings[indexPath.row])
         return cell
@@ -78,7 +78,7 @@ private extension LaunchVC {
     }
 
     func registerCells() {
-        tableView.register(LaunchCell.self, forCellReuseIdentifier: "CellForLaunches")
+        tableView.register(LaunchCell.self, forCellReuseIdentifier: LaunchCell.identifier)
     }
 
     func startSpinner() {

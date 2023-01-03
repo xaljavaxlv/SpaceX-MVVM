@@ -18,7 +18,7 @@ final class LaunchViewModel: LaunchViewModelProtocol {
     weak var viewController: LaunchVCProtocol?
     private var launches: [LaunchModel]? {
         didSet {
-            prepareStrings()
+            prepareItems()
             guard let viewController = viewController else { return }
             viewController.reload()
         }
@@ -28,19 +28,25 @@ final class LaunchViewModel: LaunchViewModelProtocol {
 
     init(rocketId: String) {
         self.rocketId = rocketId
+        startFetchingLaunches()
+    }
+
+    private func startFetchingLaunches() {
         dataProvider.fetchLaunches { [weak self] launches in
             guard let self = self else { return }
-            self.launches = launches.filter({ $0.rocket == self.rocketId })
+            DispatchQueue.main.async {
+                self.launches = launches.filter({ $0.rocket == self.rocketId })
+            }
         }
     }
 
-    private func prepareStrings() { // так норм или лучше разбить подготовку каждго стринга на отдельную функцию
+    private func prepareItems() {
         guard let launches = launches else { return  }
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.dateFormat = "d MMM y"
 
-        for launch in launches {
+        launchCellItem = launches.map { launch in
             let date = formatter.string(from: launch.dateLocal)
             var imageName: LaunchCellItem.Image
             switch launch.success {
@@ -49,7 +55,7 @@ final class LaunchViewModel: LaunchViewModelProtocol {
             default: imageName = .unknown
             }
             let launchString = LaunchCellItem(name: launch.name, date: date, imageName: imageName)
-            launchCellItem.append(launchString)
+            return launchString
         }
     }
 }
